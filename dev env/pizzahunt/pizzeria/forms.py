@@ -6,23 +6,12 @@ class FeedbackForm(forms.ModelForm):
         model = Feedback
         fields = ['name', 'email', 'phone', 'subject', 'message']
         widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-input',
-                'placeholder': 'Введите ваше имя'
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'form-input',
-                'placeholder': 'example@mail.com'
-            }),
-            'phone': forms.TextInput(attrs={
-                'class': 'form-input',
-                'placeholder': '+7 (999) 123-45-67'
-            }),
-            'subject': forms.Select(attrs={
-                'class': 'form-select'
-            }),
+            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Введите ваше имя'}),
+            'email': forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'example@mail.com'}),
+            'phone': forms.TextInput(attrs={'class': 'form-input', 'placeholder': '+7 (999) 123-45-67'}),
+            'subject': forms.Select(attrs={'class': 'form-select'}),
             'message': forms.Textarea(attrs={
-                'class': 'form-textarea',
+                'class': 'form-textarea', 
                 'placeholder': 'Опишите вашу проблему, вопрос или предложение...',
                 'rows': 5
             }),
@@ -31,28 +20,36 @@ class FeedbackForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['name', 'phone', 'email', 'address', 'comment']
+        fields = ['name', 'phone', 'email', 'address', 'comment', 'payment_method']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': 'Ваше имя'
+                'placeholder': 'Ваше имя',
+                'required': True
             }),
             'phone': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': '+7 (999) 123-45-67'
+                'placeholder': '+7 (999) 123-45-67',
+                'required': True
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-input',
-                'placeholder': 'example@mail.com'
+                'placeholder': 'example@mail.com',
+                'required': False
             }),
             'address': forms.Textarea(attrs={
                 'class': 'form-textarea',
-                'placeholder': 'Улица, дом, квартира',
-                'rows': 3
+                'placeholder': 'Улица, дом, квартира, подъезд, этаж, код домофона',
+                'rows': 3,
+                'required': True
             }),
             'comment': forms.Textarea(attrs={
                 'class': 'form-textarea',
-                'placeholder': 'Дополнительные пожелания',
+                'placeholder': 'Дополнительные пожелания (необязательно)',
                 'rows': 3
+            }),
+            'payment_method': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
             }),
         }

@@ -55,7 +55,7 @@
                  data-category="{% if pizza.is_vegetarian %}vegetarian{% endif %} {% if pizza.is_spicy %}spicy{% endif %} {% if pizza.is_popular or pizza.is_new %}special{% endif %}" 
                  data-price="{{ pizza.price_30 }}">
                 <div class="pizza-img">
-                    <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}">
+                    <img src="{{ pizza.image_url }}" alt="{{ pizza.name }}">
                     {% if pizza.is_new %}
                     <div class="pizza-badge new">Новинка</div>
                     {% elif pizza.is_popular %}
@@ -138,5 +138,153 @@ document.addEventListener('DOMContentLoaded', function() {
         pizzaGrid.classList.add('list-view');
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработка кнопки "В корзину"
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const pizzaId = this.dataset.id;
+            const pizzaName = this.dataset.name;
+            const sizeBtn = this.closest('.pizza-footer').querySelector('.size-btn.active');
+            const size = sizeBtn ? sizeBtn.dataset.size : '30';
+            
+            addToCart(pizzaId, size, 1, pizzaName);
+        });
+    });
+    
+    // Обработка выбора размера
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const parent = this.closest('.pizza-footer');
+            parent.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const priceElement = this.closest('.pizza-item').querySelector('.pizza-price');
+            const newPrice = this.dataset.price;
+            if (priceElement && newPrice) {
+                priceElement.textContent = `${newPrice} ₽`;
+            }
+        });
+    });
+    
+    // Функция добавления в корзину
+    function addToCart(pizzaId, size, quantity, pizzaName) {
+        fetch('{% url "add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `pizza_id=${pizzaId}&size=${size}&quantity=${quantity}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(`"${pizzaName}" добавлена в корзину!`);
+                
+                document.querySelectorAll('.cart-count').forEach(el => {
+                    el.textContent = data.cart_quantity;
+                });
+                
+                const btn = document.querySelector(`.add-to-cart-btn[data-id="${pizzaId}"]`);
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> В корзине';
+                    btn.style.backgroundColor = '#4CAF50';
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-plus"></i> В корзину';
+                        btn.style.backgroundColor = '';
+                    }, 2000);
+                }
+            } else {
+                showNotification(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Произошла ошибка', 'error');
+        });
+    }
+    
+    // Функция показа уведомления
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+
+// Стили для уведомлений
+const style = document.createElement('style');
+style.textContent = `
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 10000;
+        transform: translateX(150%);
+        transition: transform 0.3s ease;
+        max-width: 350px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .notification.show {
+        transform: translateX(0);
+    }
+    
+    .notification.success {
+        background-color: #4CAF50;
+        border-left: 5px solid #2E7D32;
+    }
+    
+    .notification.error {
+        background-color: #f44336;
+        border-left: 5px solid #c62828;
+    }
+    
+    .notification i {
+        font-size: 1.2rem;
+    }
+`;
+document.head.appendChild(style);
 </script>
 {% endblock %}
+

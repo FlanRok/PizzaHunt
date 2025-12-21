@@ -99,34 +99,27 @@
             {% for promotion in promotions %}
             <div class="stock-item">
                 <div class="stock-img">
+                    {% if promotion.image %}
                     <img src="{{ promotion.image.url }}" alt="{{ promotion.title }}">
+                    {% else %}
+                    <img src="{% static 'images/default-promo.jpg' %}" alt="{{ promotion.title }}">
+                    {% endif %}
                 </div>
                 <div class="stock-content">
                     <h3 class="stock-title">{{ promotion.title }}</h3>
                     <p class="stock-description">{{ promotion.description|truncatechars:150 }}</p>
-                    <div class="stock-timer">
-                        <div class="timer-item">
-                            <span class="timer-value">{% now "d" %}</span>
-                            <span class="timer-label">дней</span>
-                        </div>
-                        <div class="timer-item">
-                            <span class="timer-value">{% now "H" %}</span>
-                            <span class="timer-label">часов</span>
-                        </div>
-                        <div class="timer-item">
-                            <span class="timer-value">{% now "i" %}</span>
-                            <span class="timer-label">минут</span>
-                        </div>
-                    </div>
+                    <a href="{% url 'menu' %}" class="btn">Воспользоваться акцией</a>
                 </div>
             </div>
             {% empty %}
-            <p>Акций пока нет</p>
+            <div class="no-promotions">
+                <p>Акций пока нет</p>
+            </div>
             {% endfor %}
         </div>
         
-        <div class="show-more" id="button">
-            <a href="#" class="btn">Все акции</a>
+        <div class="show-more">
+            <a href="{% url 'menu' %}" class="btn">Все акции</a>
         </div>
     </div>
 </section>

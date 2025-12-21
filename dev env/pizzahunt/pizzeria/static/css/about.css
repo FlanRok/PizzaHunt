@@ -253,7 +253,7 @@
     color: var(--text-light);
     padding: 100px 0;
     text-align: center;
-    background-color: var(--primary-red); /* Fallback цвет */
+    background-color: var(--primary-red);
 }
 
 .cta-section h2 {
