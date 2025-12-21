@@ -1,6 +1,4 @@
 from .models import Cart, CartItem
-from django.contrib.sessions.models import Session
-from django.utils import timezone
 
 def get_cart(request):
     """Получить или создать корзину для пользователя/сессии"""

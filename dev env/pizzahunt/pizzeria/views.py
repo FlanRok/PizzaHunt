@@ -7,9 +7,13 @@ from django.db.models import Q
 from .models import *
 from .forms import FeedbackForm, OrderForm, RegisterForm, LoginForm, ProfileForm, UserUpdateForm
 from .utils import *
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.contrib.admin.views.decorators import staff_member_required
+from datetime import timedelta, datetime, time
+from django.db.models import Sum
+from django.utils import timezone
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -341,3 +345,85 @@ def order_detail(request, order_id):
     return render(request, 'pizzeria/order_detail.html', {
         'order': order,
     })
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils import timezone
+from datetime import timedelta
+from django.db.models import Count, Sum
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+
+@staff_member_required
+def admin_dashboard(request):
+    """Кастомная админ-панель"""
+    
+    today = datetime.now().date()
+    today_start = datetime.combine(today, time.min)
+    today_end = datetime.combine(today, time.max)
+
+    if timezone.is_aware(timezone.now()):
+        today_start = timezone.make_aware(today_start)
+        today_end = timezone.make_aware(today_end)
+
+    try:
+        orders_today = Order.objects.filter(created_at__date=today)
+    except:
+        from django.db.models import Q
+        orders_today = Order.objects.filter(
+            Q(created_at__gte=today_start) & 
+            Q(created_at__lte=today_end)
+        )
+
+    orders_today = Order.objects.filter(created_at__range=[today_start, today_end])
+    orders_week = Order.objects.filter(created_at__gte=today - timedelta(days=7))
+    
+    revenue_today = orders_today.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    revenue_week = orders_week.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    
+    total_users = User.objects.count()
+    new_users_today = User.objects.filter(date_joined__date=today).count()
+    
+    total_pizzas = Pizza.objects.count()
+    popular_pizzas = Pizza.objects.filter(is_popular=True).count()
+    
+    recent_orders = Order.objects.order_by('-created_at')[:10]
+    
+    context = {
+        'today': timezone.now(),
+        'stats': {
+            'orders_today': orders_today.count(),
+            'orders_week': orders_week.count(),
+            'revenue_today': revenue_today,
+            'revenue_week': revenue_week,
+            'total_users': total_users,
+            'new_users_today': new_users_today,
+            'total_pizzas': total_pizzas,
+            'popular_pizzas': popular_pizzas,
+        },
+        'recent_orders': recent_orders,
+    }
+    
+    return render(request, 'pizzeria/admin_dashboard.html', context)
+
+@staff_member_required
+def admin_stats_api(request):
+    
+    today = timezone.now().date()
+    today_start = timezone.make_aware(timezone.datetime.combine(today, timezone.datetime.min.time()))
+    today_end = timezone.make_aware(timezone.datetime.combine(today, timezone.datetime.max.time()))
+    
+    orders_today = Order.objects.filter(created_at__range=[today_start, today_end])
+    revenue_today = orders_today.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    
+    total_users = User.objects.count()
+    total_pizzas = Pizza.objects.count()
+    
+    data = {
+        'orders_today': orders_today.count(),
+        'revenue_today': float(revenue_today),
+        'total_users': total_users,
+        'total_pizzas': total_pizzas,
+        'updated': timezone.now().isoformat(),
+    }
+    
+    return JsonResponse(data)

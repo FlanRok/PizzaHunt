@@ -8,7 +8,20 @@ from .views import (
     logout_view, 
     profile_view, 
     profile_edit_view, 
+    admin_dashboard,
+    admin_stats_api
 )
+from django.contrib.auth.decorators import user_passes_test
+
+def admin_required(function=None):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and u.is_staff,
+        login_url='/login/',
+        redirect_field_name=None
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
@@ -29,6 +42,9 @@ urlpatterns = [
     path('register/', register_view, name='register'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
+
+    path('myadmin/dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('myadmin/stats/', admin_stats_api, name='admin_stats'),
     
     path('password-reset/', 
          auth_views.PasswordResetView.as_view(
