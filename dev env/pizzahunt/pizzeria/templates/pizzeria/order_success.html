@@ -1,77 +1,73 @@
-{% extends 'pizzeria/base.html' %}
-{% load static %}
-
-{% block title %}Заказ оформлен - Pizzahunt{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/order_success.css' %}">
-{% endblock %}
-
-{% block content %}
+{% extends 'pizzeria/base.html' %} {% load static %} {% block title %}Заказ
+оформлен - Pizzahunt{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/order_success.css' %}" />
+{% endblock %} {% block content %}
 <section class="success-section">
-    <div class="container">
-        <div class="success-card">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            
-            <h1>Заказ успешно оформлен!</h1>
-            
-            {% if order %}
-            <div class="order-info">
-                <div class="info-item">
-                    <span class="info-label">Номер заказа:</span>
-                    <span class="info-value">#{{ order.id }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Имя:</span>
-                    <span class="info-value">{{ order.name }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Телефон:</span>
-                    <span class="info-value">{{ order.phone }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Адрес доставки:</span>
-                    <span class="info-value">{{ order.address }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Сумма заказа:</span>
-                    <span class="info-value">{{ order.total_price }} ₽</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Статус:</span>
-                    <span class="info-value status-new">{{ order.get_status_display }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Способ оплаты:</span>
-                    <span class="info-value">{{ order.get_payment_method_display }}</span>
-                </div>
-            </div>
-            {% endif %}
-            
-            <div class="success-message">
-                <p>Мы получили ваш заказ и уже начали его готовить.</p>
-                <p>Скоро с вами свяжется оператор для подтверждения заказа.</p>
-                <p>Ожидайте доставку в течение 30-45 минут.</p>
-            </div>
-            
-            <div class="success-actions">
-                <a href="{% url 'home' %}" class="btn btn-primary">
-                    <i class="fas fa-home"></i> На главную
-                </a>
-                <a href="{% url 'menu' %}" class="btn btn-secondary">
-                    <i class="fas fa-pizza-slice"></i> Заказать еще
-                </a>
-            </div>
-            
-            <div class="contact-info">
-                <p>Если у вас есть вопросы, звоните:</p>
-                <p class="phone-number">
-                    <i class="fas fa-phone"></i> +7 (495) 123-45-67
-                </p>
-            </div>
+  <div class="container">
+    <div class="success-card">
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+
+      <h1>Заказ успешно оформлен!</h1>
+
+      {% if order %}
+      <div class="order-info">
+        <div class="info-item">
+          <span class="info-label">Номер заказа:</span>
+          <span class="info-value">#{{ order.id }}</span>
         </div>
+        <div class="info-item">
+          <span class="info-label">Имя:</span>
+          <span class="info-value">{{ order.name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Телефон:</span>
+          <span class="info-value">{{ order.phone }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Адрес доставки:</span>
+          <span class="info-value">{{ order.address }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Сумма заказа:</span>
+          <span class="info-value">{{ order.total_price }} ₽</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Статус:</span>
+          <span class="info-value status-new"
+            >{{ order.get_status_display }}</span
+          >
+        </div>
+        <div class="info-item">
+          <span class="info-label">Способ оплаты:</span>
+          <span class="info-value">{{ order.get_payment_method_display }}</span>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="success-message">
+        <p>Мы получили ваш заказ и уже начали его готовить.</p>
+        <p>Скоро с вами свяжется оператор для подтверждения заказа.</p>
+        <p>Ожидайте доставку в течение 30-45 минут.</p>
+      </div>
+
+      <div class="success-actions">
+        <a href="{% url 'home' %}" class="btn btn-primary">
+          <i class="fas fa-home"></i> На главную
+        </a>
+        <a href="{% url 'menu' %}" class="btn btn-secondary">
+          <i class="fas fa-pizza-slice"></i> Заказать еще
+        </a>
+      </div>
+
+      <div class="contact-info">
+        <p>Если у вас есть вопросы, звоните:</p>
+        <p class="phone-number">
+          <i class="fas fa-phone"></i> +7 (495) 123-45-67
+        </p>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}

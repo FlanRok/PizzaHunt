@@ -1,376 +1,379 @@
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://img.freepik.com/free-photo/delicious-pizza-studio_23-2151846545.jpg?semt=ais_hybrid&w=740');
-    background-size: cover;
-    background-position: center;
-    color: var(--text-light);
-    padding: 120px 0;
-    text-align: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("https://img.freepik.com/free-photo/delicious-pizza-studio_23-2151846545.jpg?semt=ais_hybrid&w=740");
+  background-size: cover;
+  background-position: center;
+  color: var(--text-light);
+  padding: 120px 0;
+  text-align: center;
 }
 
 .hero-content {
-    max-width: 800px;
-    margin: 0 auto;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .hero h1 {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-    line-height: 1.2;
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  line-height: 1.2;
 }
 
 .hero p {
-    font-size: 1.3rem;
-    margin-bottom: 40px;
-    opacity: 0.9;
+  font-size: 1.3rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
 }
 
 .hero-btns {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .hero-btn {
-    background-color: var(--primary-red);
-    color: var(--text-light);
-    padding: 16px 36px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.2rem;
-    transition: var(--transition);
+  background-color: var(--primary-red);
+  color: var(--text-light);
+  padding: 16px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.2rem;
+  transition: var(--transition);
 }
 
 .hero-btn:hover {
-    background-color: var(--primary-orange);
-    transform: translateY(-3px);
+  background-color: var(--primary-orange);
+  transform: translateY(-3px);
 }
 
 .hero-btn.secondary {
-    background-color: transparent;
-    border: 2px solid var(--text-light);
+  background-color: transparent;
+  border: 2px solid var(--text-light);
 }
 
 .hero-btn.secondary:hover {
-    background-color: var(--text-light);
-    color: var(--text-dark);
+  background-color: var(--text-light);
+  color: var(--text-dark);
 }
 
-
-.combo-grid, .new-grid, .stock-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+.combo-grid,
+.new-grid,
+.stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
 }
 .combo-item {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    transition: transform 0.3s ease;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.3s ease;
 }
 
 .combo-item:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
 .combo-img {
-    height: 200px;
-    overflow: hidden;
+  height: 200px;
+  overflow: hidden;
 }
 
-
 .combo-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
 .combo-item:hover .combo-img img {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 .combo-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .combo-title {
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
-    color: #333;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .combo-description {
-    color: #666;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 15px;
-    flex-grow: 1;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  flex-grow: 1;
 }
 
 .combo-price {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
 }
 
 .price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-red);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-red);
 }
 
 .add-to-cart {
-    background-color: var(--primary-red);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition);
+  background-color: var(--primary-red);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
 .add-to-cart:hover {
-    background-color: var(--primary-orange);
-    transform: rotate(90deg);
+  background-color: var(--primary-orange);
+  transform: rotate(90deg);
 }
 
-
 .description-section {
-    background-color: var(--dark-bg);
-    color: var(--text-light);
+  background-color: var(--dark-bg);
+  color: var(--text-light);
 }
 
 .description-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
 }
 
 .description-img {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
 .description-img img {
-    width: 100%;
-    height: auto;
-    display: block;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .description-content h2 {
-    font-size: 2.2rem;
-    margin-bottom: 20px;
-    color: var(--text-light);
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  color: var(--text-light);
 }
 
 .description-content p {
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-    opacity: 0.9;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  opacity: 0.9;
 }
 
-
 .new-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
 }
 
 .new-item {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .new-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .new-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: #ff9800;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ff9800;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 
 .new-icon {
-    width: 60px;
-    height: 60px;
-    background: #d32f2f;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 15px;
-    color: white;
-    font-size: 1.5rem;
+  width: 60px;
+  height: 60px;
+  background: #d32f2f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  color: white;
+  font-size: 1.5rem;
 }
 
 .new-title {
-    margin: 0 0 10px 0;
-    font-size: 1.1rem;
-    color: #333;
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  color: #333;
 }
 
 .new-description {
-    color: #666;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    margin-bottom: 20px;
-    flex-grow: 1;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  flex-grow: 1;
 }
 
 .add-to-cart-pizza {
-    background-color: #d32f2f;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-top: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
 }
 
 .add-to-cart-pizza:hover {
-    background-color: #ff9800;
+  background-color: #ff9800;
 }
 
 .stock-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
 }
 
 .stock-item {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .stock-img {
-    height: 200px;
-    overflow: hidden;
+  height: 200px;
+  overflow: hidden;
 }
 
 .stock-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
 .stock-item:hover .stock-img img {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .stock-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .stock-title {
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
-    color: #333;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .stock-description {
-    color: #666;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    flex-grow: 1;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  flex-grow: 1;
 }
 
 .stock-content .btn {
-    margin-top: auto;
-    align-self: flex-start;
+  margin-top: auto;
+  align-self: flex-start;
 }
 
 .show-more {
-    text-align: center;
-    margin-top: 50px;
+  text-align: center;
+  margin-top: 50px;
 }
 
 @media (max-width: 992px) {
-    .description-container {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-    
-    .hero h1 {
-        font-size: 2.8rem;
-    }
+  .description-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+  }
 }
 
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.3rem;
-    }
-    
-    .hero p {
-        font-size: 1.1rem;
-    }
-    
-    .combo-grid, .new-grid, .stock-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
+  .hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  .combo-grid,
+  .new-grid,
+  .stock-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
 }
 
 @media (max-width: 480px) {
-    .hero h1 {
-        font-size: 1.8rem;
-    }
-    
-    .hero-btns {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .combo-grid, .new-grid, .stock-grid {
-        grid-template-columns: 1fr;
-    }
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-btns {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .combo-grid,
+  .new-grid,
+  .stock-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,329 +1,366 @@
-{% extends 'pizzeria/base.html' %}
-{% load static %}
-
-{% block title %}Pizzahunt - Главная{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
-{% endblock %}
-
-{% block content %}
+{% extends 'pizzeria/base.html' %} {% load static %} {% block title %}Pizzahunt
+- Главная{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}" />
+{% endblock %} {% block content %}
 <!-- Герой секция -->
 <section class="hero">
-    <div class="container hero-content">
-        <h1>Охотитесь за вкуснейшей пиццей? Вы нашли!</h1>
-        <p>Только свежие ингредиенты, итальянские рецепты и доставка за 30 минут. Более 50 видов пиццы на ваш выбор.</p>
-        <div class="hero-btns">
-            <a href="{% url 'menu' %}" class="hero-btn">Смотреть меню</a>
-            <a href="#stock" class="hero-btn secondary">Акции недели</a>
-        </div>
+  <div class="container hero-content">
+    <h1>Охотитесь за вкуснейшей пиццей? Вы нашли!</h1>
+    <p>
+      Только свежие ингредиенты, итальянские рецепты и доставка за 30 минут.
+      Более 50 видов пиццы на ваш выбор.
+    </p>
+    <div class="hero-btns">
+      <a href="{% url 'menu' %}" class="hero-btn">Смотреть меню</a>
+      <a href="#stock" class="hero-btn secondary">Акции недели</a>
     </div>
+  </div>
 </section>
 
 <!-- Секция комбо -->
 <section class="section combo-section" id="combo">
-    <div class="container">
-        <div class="section-title">
-            <h2>Комбо-предложения</h2>
-            <p>Выгодные наборы для компании или семьи</p>
-        </div>
-        
-        <div class="combo-grid">
-            {% for combo in combos %}
-            <div class="combo-item">
-                <div class="combo-img">
-                    {% if combo.image_url %}
-                    <img src="{{ combo.image_url }}" alt="{{ combo.name }}">
-                    {% else %}
-                    <img src="{% static 'images/default-combo.jpg' %}" alt="{{ combo.name }}">
-                    {% endif %}
-                </div>
-                <div class="combo-content">
-                    <h3 class="combo-title">{{ combo.name }}</h3>
-                    <p class="combo-description">{{ combo.description|truncatechars:100 }}</p>
-                    <div class="combo-price">
-                        <div class="price">{{ combo.price }} ₽</div>
-                        <button class="add-to-cart-combo" 
-                                data-combo-id="{{ combo.id }}" 
-                                data-combo-name="{{ combo.name }}"
-                                data-combo-price="{{ combo.price }}">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="no-combos">
-                <p>Комбо пока нет в меню</p>
-            </div>
-            {% endfor %}
-        </div>
+  <div class="container">
+    <div class="section-title">
+      <h2>Комбо-предложения</h2>
+      <p>Выгодные наборы для компании или семьи</p>
     </div>
+
+    <div class="combo-grid">
+      {% for combo in combos %}
+      <div class="combo-item">
+        <div class="combo-img">
+          {% if combo.image_url %}
+          <img src="{{ combo.image_url }}" alt="{{ combo.name }}" />
+          {% else %}
+          <img
+            src="{% static 'images/default-combo.jpg' %}"
+            alt="{{ combo.name }}"
+          />
+          {% endif %}
+        </div>
+        <div class="combo-content">
+          <h3 class="combo-title">{{ combo.name }}</h3>
+          <p class="combo-description">
+            {{ combo.description|truncatechars:100 }}
+          </p>
+          <div class="combo-price">
+            <div class="price">{{ combo.price }} ₽</div>
+            <button
+              class="add-to-cart-combo"
+              data-combo-id="{{ combo.id }}"
+              data-combo-name="{{ combo.name }}"
+              data-combo-price="{{ combo.price }}"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="no-combos">
+        <p>Комбо пока нет в меню</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
 <!-- Описание секция -->
 <section class="section description-section" id="Описание">
-    <div class="container description-container">
-        <div class="description-img">
-            <img src="{% static 'images/description.png' %}" alt="Пицца от Pizzahunt">
-        </div>
-        <div class="description-content">
-            <h2>Почему выбирают нас?</h2>
-            <p>Мы используем только свежие ингредиенты: итальянскую муку, настоящий сыр моцарелла, томаты из солнечной Италии и домашние соусы по традиционным рецептам.</p>
-            <p>Наши пиццы готовятся в дровяной печи при температуре 400°C, что гарантирует тонкую хрустящую корочку и неповторимый вкус.</p>
-            <p>Доставка по городу занимает не более 30 минут. Если мы опоздаем — вы получаете пиццу бесплатно!</p>
-            <a href="{% url 'about' %}" class="btn">Подробнее о нас</a>
-        </div>
+  <div class="container description-container">
+    <div class="description-img">
+      <img
+        src="{% static 'images/description.png' %}"
+        alt="Пицца от Pizzahunt"
+      />
     </div>
+    <div class="description-content">
+      <h2>Почему выбирают нас?</h2>
+      <p>
+        Мы используем только свежие ингредиенты: итальянскую муку, настоящий сыр
+        моцарелла, томаты из солнечной Италии и домашние соусы по традиционным
+        рецептам.
+      </p>
+      <p>
+        Наши пиццы готовятся в дровяной печи при температуре 400°C, что
+        гарантирует тонкую хрустящую корочку и неповторимый вкус.
+      </p>
+      <p>
+        Доставка по городу занимает не более 30 минут. Если мы опоздаем — вы
+        получаете пиццу бесплатно!
+      </p>
+      <a href="{% url 'about' %}" class="btn">Подробнее о нас</a>
+    </div>
+  </div>
 </section>
 
 <!-- Секция новинок -->
 <section class="section new-section" id="new">
-    <div class="container">
-        <div class="section-title">
-            <h2>Новички в меню</h2>
-            <p>Попробуйте наши новые вкусы</p>
-        </div>
-        
-        <div class="new-grid">
-            {% for pizza in new_pizzas %}
-            <div class="new-item">
-                <div class="new-badge">NEW</div>
-                <div class="new-icon">
-                    {% if pizza.is_spicy %}
-                    <i class="fas fa-pepper-hot"></i>
-                    {% elif pizza.is_vegetarian %}
-                    <i class="fas fa-leaf"></i>
-                    {% else %}
-                    <i class="fas fa-pizza-slice"></i>
-                    {% endif %}
-                </div>
-                <h3 class="new-title">{{ pizza.name }}</h3>
-                <p class="new-description">{{ pizza.description|truncatechars:80 }}</p>
-                <button class="add-to-cart-pizza" 
-                        data-pizza-id="{{ pizza.id }}" 
-                        data-pizza-name="{{ pizza.name }}"
-                        data-pizza-price="{{ pizza.price_30 }}">
-                    <i class="fas fa-plus"></i> Добавить в корзину
-                </button>
-            </div>
-            {% empty %}
-            <div class="no-new">
-                <p>Новых пицц пока нет</p>
-            </div>
-            {% endfor %}
-        </div>
+  <div class="container">
+    <div class="section-title">
+      <h2>Новички в меню</h2>
+      <p>Попробуйте наши новые вкусы</p>
     </div>
+
+    <div class="new-grid">
+      {% for pizza in new_pizzas %}
+      <div class="new-item">
+        <div class="new-badge">NEW</div>
+        <div class="new-icon">
+          {% if pizza.is_spicy %}
+          <i class="fas fa-pepper-hot"></i>
+          {% elif pizza.is_vegetarian %}
+          <i class="fas fa-leaf"></i>
+          {% else %}
+          <i class="fas fa-pizza-slice"></i>
+          {% endif %}
+        </div>
+        <h3 class="new-title">{{ pizza.name }}</h3>
+        <p class="new-description">{{ pizza.description|truncatechars:80 }}</p>
+        <button
+          class="add-to-cart-pizza"
+          data-pizza-id="{{ pizza.id }}"
+          data-pizza-name="{{ pizza.name }}"
+          data-pizza-price="{{ pizza.price_30 }}"
+        >
+          <i class="fas fa-plus"></i> Добавить в корзину
+        </button>
+      </div>
+      {% empty %}
+      <div class="no-new">
+        <p>Новых пицц пока нет</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
 <!-- Секция акций -->
 <section class="section stock-section" id="stock">
-    <div class="container">
-        <div class="section-title">
-            <h2>Горячие акции</h2>
-            <p>Успейте воспользоваться выгодными предложениями</p>
-        </div>
-        
-        <div class="stock-grid">
-            {% for promotion in promotions %}
-            <div class="stock-item">
-                <div class="stock-img">
-                    {% if promotion.image %}
-                    <img src="{{ promotion.image.url }}" alt="{{ promotion.title }}">
-                    {% else %}
-                    <img src="{% static 'images/default-promo.jpg' %}" alt="{{ promotion.title }}">
-                    {% endif %}
-                </div>
-                <div class="stock-content">
-                    <h3 class="stock-title">{{ promotion.title }}</h3>
-                    <p class="stock-description">{{ promotion.description|truncatechars:150 }}</p>
-                    <a href="{% url 'menu' %}" class="btn">Воспользоваться акцией</a>
-                </div>
-            </div>
-            {% empty %}
-            <div class="no-promotions">
-                <p>Акций пока нет</p>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <div class="show-more">
-            <a href="{% url 'menu' %}" class="btn">Все акции</a>
-        </div>
+  <div class="container">
+    <div class="section-title">
+      <h2>Горячие акции</h2>
+      <p>Успейте воспользоваться выгодными предложениями</p>
     </div>
-</section>
-{% endblock %}
 
-{% block extra_js %}
+    <div class="stock-grid">
+      {% for promotion in promotions %}
+      <div class="stock-item">
+        <div class="stock-img">
+          {% if promotion.image %}
+          <img src="{{ promotion.image.url }}" alt="{{ promotion.title }}" />
+          {% else %}
+          <img
+            src="{% static 'images/default-promo.jpg' %}"
+            alt="{{ promotion.title }}"
+          />
+          {% endif %}
+        </div>
+        <div class="stock-content">
+          <h3 class="stock-title">{{ promotion.title }}</h3>
+          <p class="stock-description">
+            {{ promotion.description|truncatechars:150 }}
+          </p>
+          <a href="{% url 'menu' %}" class="btn">Воспользоваться акцией</a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="no-promotions">
+        <p>Акций пока нет</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="show-more">
+      <a href="{% url 'menu' %}" class="btn">Все акции</a>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("DOMContentLoaded", function () {
     // Добавление комбо в корзину
-    document.querySelectorAll('.add-to-cart-combo').forEach(button => {
-        button.addEventListener('click', function() {
-            const comboId = this.dataset.comboId;
-            const comboName = this.dataset.comboName;
-            const comboPrice = this.dataset.comboPrice;
-            
-            addComboToCart(comboId, comboName, comboPrice, this);
-        });
+    document.querySelectorAll(".add-to-cart-combo").forEach((button) => {
+      button.addEventListener("click", function () {
+        const comboId = this.dataset.comboId;
+        const comboName = this.dataset.comboName;
+        const comboPrice = this.dataset.comboPrice;
+
+        addComboToCart(comboId, comboName, comboPrice, this);
+      });
     });
-    
+
     // Добавление пиццы в корзину (новинки)
-    document.querySelectorAll('.add-to-cart-pizza').forEach(button => {
-        button.addEventListener('click', function() {
-            const pizzaId = this.dataset.pizzaId;
-            const pizzaName = this.dataset.pizzaName;
-            const pizzaPrice = this.dataset.pizzaPrice;
-            
-            addPizzaToCart(pizzaId, pizzaName, pizzaPrice, this);
-        });
+    document.querySelectorAll(".add-to-cart-pizza").forEach((button) => {
+      button.addEventListener("click", function () {
+        const pizzaId = this.dataset.pizzaId;
+        const pizzaName = this.dataset.pizzaName;
+        const pizzaPrice = this.dataset.pizzaPrice;
+
+        addPizzaToCart(pizzaId, pizzaName, pizzaPrice, this);
+      });
     });
-    
+
     // Функция добавления комбо в корзину
     function addComboToCart(comboId, comboName, comboPrice, button) {
-        fetch('{% url "add_to_cart" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: `item_type=combo&item_id=${comboId}&quantity=1`
+      fetch('{% url "add_to_cart" %}', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: `item_type=combo&item_id=${comboId}&quantity=1`,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            showNotification(
+              `"${comboName}" добавлено в корзину за ${comboPrice} ₽`
+            );
+
+            // Обновляем счетчик корзины
+            updateCartCount(data.cart_quantity);
+
+            // Анимация кнопки
+            animateButton(button);
+          } else {
+            showNotification(data.message, "error");
+          }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification(`"${comboName}" добавлено в корзину за ${comboPrice} ₽`);
-                
-                // Обновляем счетчик корзины
-                updateCartCount(data.cart_quantity);
-                
-                // Анимация кнопки
-                animateButton(button);
-            } else {
-                showNotification(data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Произошла ошибка при добавлении в корзину', 'error');
+        .catch((error) => {
+          console.error("Error:", error);
+          showNotification(
+            "Произошла ошибка при добавлении в корзину",
+            "error"
+          );
         });
     }
-    
+
     // Функция добавления пиццы в корзину
     function addPizzaToCart(pizzaId, pizzaName, pizzaPrice, button) {
-        fetch('{% url "add_to_cart" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: `item_type=pizza&item_id=${pizzaId}&size=30&quantity=1`
+      fetch('{% url "add_to_cart" %}', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: `item_type=pizza&item_id=${pizzaId}&size=30&quantity=1`,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            showNotification(
+              `"${pizzaName}" добавлена в корзину за ${pizzaPrice} ₽`
+            );
+
+            // Обновляем счетчик корзины
+            updateCartCount(data.cart_quantity);
+
+            // Анимация кнопки
+            animateButton(button, true);
+          } else {
+            showNotification(data.message, "error");
+          }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification(`"${pizzaName}" добавлена в корзину за ${pizzaPrice} ₽`);
-                
-                // Обновляем счетчик корзины
-                updateCartCount(data.cart_quantity);
-                
-                // Анимация кнопки
-                animateButton(button, true);
-            } else {
-                showNotification(data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Произошла ошибка при добавлении в корзину', 'error');
+        .catch((error) => {
+          console.error("Error:", error);
+          showNotification(
+            "Произошла ошибка при добавлении в корзину",
+            "error"
+          );
         });
     }
-    
+
     // Функция обновления счетчика корзины
     function updateCartCount(count) {
-        document.querySelectorAll('.cart-count').forEach(el => {
-            el.textContent = count;
-        });
+      document.querySelectorAll(".cart-count").forEach((el) => {
+        el.textContent = count;
+      });
     }
-    
+
     // Функция анимации кнопки
     function animateButton(button, isPizzaButton = false) {
-        const originalHTML = button.innerHTML;
-        const originalBgColor = button.style.backgroundColor;
-        
-        // Меняем иконку на галочку
-        button.innerHTML = '<i class="fas fa-check"></i>' + (isPizzaButton ? ' Добавлено' : '');
-        button.style.backgroundColor = '#4CAF50';
-        button.style.color = 'white';
-        
-        // Возвращаем обратно через 2 секунды
-        setTimeout(() => {
-            button.innerHTML = originalHTML;
-            button.style.backgroundColor = originalBgColor;
-            button.style.color = '';
-        }, 2000);
+      const originalHTML = button.innerHTML;
+      const originalBgColor = button.style.backgroundColor;
+
+      // Меняем иконку на галочку
+      button.innerHTML =
+        '<i class="fas fa-check"></i>' + (isPizzaButton ? " Добавлено" : "");
+      button.style.backgroundColor = "#4CAF50";
+      button.style.color = "white";
+
+      // Возвращаем обратно через 2 секунды
+      setTimeout(() => {
+        button.innerHTML = originalHTML;
+        button.style.backgroundColor = originalBgColor;
+        button.style.color = "";
+      }, 2000);
     }
-    
+
     // Функция показа уведомления
-    function showNotification(message, type = 'success') {
-        // Создаем элемент уведомления
-        const notification = document.createElement('div');
-        notification.className = `cart-notification ${type}`;
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+    function showNotification(message, type = "success") {
+      // Создаем элемент уведомления
+      const notification = document.createElement("div");
+      notification.className = `cart-notification ${type}`;
+      notification.innerHTML = `
+            <i class="fas fa-${
+              type === "success" ? "check-circle" : "exclamation-circle"
+            }"></i>
             <span>${message}</span>
             <button class="notification-close"><i class="fas fa-times"></i></button>
         `;
-        
-        // Добавляем в тело документа
-        document.body.appendChild(notification);
-        
-        // Показываем с анимацией
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 10);
-        
-        // Закрытие по клику на крестик
-        notification.querySelector('.notification-close').addEventListener('click', () => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
+
+      // Добавляем в тело документа
+      document.body.appendChild(notification);
+
+      // Показываем с анимацией
+      setTimeout(() => {
+        notification.classList.add("show");
+      }, 10);
+
+      // Закрытие по клику на крестик
+      notification
+        .querySelector(".notification-close")
+        .addEventListener("click", () => {
+          notification.classList.remove("show");
+          setTimeout(() => notification.remove(), 300);
         });
-        
-        // Автоматическое закрытие через 3 секунды
-        setTimeout(() => {
+
+      // Автоматическое закрытие через 3 секунды
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.classList.remove("show");
+          setTimeout(() => {
             if (notification.parentNode) {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.remove();
-                    }
-                }, 300);
+              notification.remove();
             }
-        }, 3000);
+          }, 300);
+        }
+      }, 3000);
     }
-    
+
     // Функция получения CSRF токена
     function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
         }
-        return cookieValue;
+      }
+      return cookieValue;
     }
-});
+  });
 
-// Стили для уведомлений
-const notificationStyles = document.createElement('style');
-notificationStyles.textContent = `
+  // Стили для уведомлений
+  const notificationStyles = document.createElement("style");
+  notificationStyles.textContent = `
     .cart-notification {
         position: fixed;
         top: 20px;
@@ -430,6 +467,6 @@ notificationStyles.textContent = `
         font-size: 1.1rem;
     }
 `;
-document.head.appendChild(notificationStyles);
+  document.head.appendChild(notificationStyles);
 </script>
 {% endblock %}

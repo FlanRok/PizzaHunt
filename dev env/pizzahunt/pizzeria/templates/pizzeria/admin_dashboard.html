@@ -1,193 +1,205 @@
-{% extends 'pizzeria/base.html' %}
-{% load static %}
-
-{% block title %}Панель управления - PizzaHunt{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/admin.css' %}">
-{% endblock %}
-
-{% block content %}
+{% extends 'pizzeria/base.html' %} {% load static %} {% block title %}Панель
+управления - PizzaHunt{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}" />
+{% endblock %} {% block content %}
 <header class="admin-header">
-    <div class="container">
-        <h1><i class="fas fa-crown"></i> Панель управления</h1>
-        <p>Добро пожаловать, {{ user.username }}! Сегодня: {{ today|date:"d.m.Y" }}</p>
-    </div>
+  <div class="container">
+    <h1><i class="fas fa-crown"></i> Панель управления</h1>
+    <p>
+      Добро пожаловать, {{ user.username }}! Сегодня: {{ today|date:"d.m.Y" }}
+    </p>
+  </div>
 </header>
 
 <main class="container">
-    <!-- Статистика -->
-    <section class="admin-stats">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: #3498db;">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
-            <div class="stat-value">{{ stats.orders_today }}</div>
-            <div class="stat-label">Заказов сегодня</div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon" style="background: #2ecc71;">
-                <i class="fas fa-ruble-sign"></i>
-            </div>
-            <div class="stat-value">{{ stats.revenue_today|floatformat:0 }} ₽</div>
-            <div class="stat-label">Выручка сегодня</div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon" style="background: #f39c12;">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="stat-value">{{ stats.total_users }}</div>
-            <div class="stat-label">Всего пользователей</div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon" style="background: #e74c3c;">
-                <i class="fas fa-pizza-slice"></i>
-            </div>
-            <div class="stat-value">{{ stats.total_pizzas }}</div>
-            <div class="stat-label">Видов пицц</div>
-        </div>
-    </section>
-
-    <!-- Быстрые действия -->
-    <section class="admin-actions">
-        <a href="/admin/pizzeria/order/" class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-clipboard-list"></i>
-            </div>
-            <div class="action-title">Управление заказами</div>
-            <div class="action-desc">Просмотр и изменение заказов</div>
-        </a>
-        
-        <a href="/admin/pizzeria/pizza/" class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-pizza-slice"></i>
-            </div>
-            <div class="action-title">Управление меню</div>
-            <div class="action-desc">Добавление и редактирование пицц</div>
-        </a>
-        
-        <a href="/admin/auth/user/" class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-users-cog"></i>
-            </div>
-            <div class="action-title">Управление пользователями</div>
-            <div class="action-desc">Просмотр и редактирование пользователей</div>
-        </a>
-        
-        <a href="/admin/pizzeria/feedback/" class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-comments"></i>
-            </div>
-            <div class="action-title">Обратная связь</div>
-            <div class="action-desc">Просмотр сообщений от клиентов</div>
-        </a>
-        
-        <a href="/admin/pizzeria/combo/" class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-gift"></i>
-            </div>
-            <div class="action-title">Комбо-предложения</div>
-            <div class="action-desc">Управление комбо-наборами</div>
-        </a>
-        
-        <a href="/admin/pizzeria/promotion/" class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-bullhorn"></i>
-            </div>
-            <div class="action-title">Акции</div>
-            <div class="action-desc">Управление акциями и промо</div>
-        </a>
-    </section>
-
-    <!-- Последние заказы -->
-    <section class="recent-orders">
-        <h2 class="section-title">
-            <i class="fas fa-history"></i> Последние заказы
-        </h2>
-        
-        {% if recent_orders %}
-        <table class="orders-table">
-            <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Клиент</th>
-                    <th>Телефон</th>
-                    <th>Сумма</th>
-                    <th>Статус</th>
-                    <th>Дата</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in recent_orders %}
-                <tr>
-                    <td><strong>#{{ order.id }}</strong></td>
-                    <td>{{ order.name }}</td>
-                    <td>{{ order.phone }}</td>
-                    <td>{{ order.total_price }} ₽</td>
-                    <td>
-                        <span class="status-badge status-{{ order.status }}">
-                            {{ order.get_status_display }}
-                        </span>
-                    </td>
-                    <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
-                    <td>
-                        <a href="/admin/pizzeria/order/{{ order.id }}/change/" 
-                           class="btn btn-sm" 
-                           style="background: #2196F3; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.85rem;">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div style="text-align: center; padding: 40px; color: #666;">
-            <i class="fas fa-shopping-cart fa-3x" style="color: #ddd; margin-bottom: 20px;"></i>
-            <p>Заказов пока нет</p>
-        </div>
-        {% endif %}
-    </section>
-
-    <div class="admin-nav">
-        <a href="/admin/" class="btn-admin" target="_blank">
-            <i class="fas fa-external-link-alt"></i> Полная админ-панель Django
-        </a>
-        <a href="{% url 'profile' %}" class="btn-secondary">
-            <i class="fas fa-arrow-left"></i> Вернуться в профиль
-        </a>
+  <!-- Статистика -->
+  <section class="admin-stats">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #3498db">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <div class="stat-value">{{ stats.orders_today }}</div>
+      <div class="stat-label">Заказов сегодня</div>
     </div>
-</main>
-{% endblock %}
 
-{% block extra_js %}
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #2ecc71">
+        <i class="fas fa-ruble-sign"></i>
+      </div>
+      <div class="stat-value">{{ stats.revenue_today|floatformat:0 }} ₽</div>
+      <div class="stat-label">Выручка сегодня</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #f39c12">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-value">{{ stats.total_users }}</div>
+      <div class="stat-label">Всего пользователей</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #e74c3c">
+        <i class="fas fa-pizza-slice"></i>
+      </div>
+      <div class="stat-value">{{ stats.total_pizzas }}</div>
+      <div class="stat-label">Видов пицц</div>
+    </div>
+  </section>
+
+  <!-- Быстрые действия -->
+  <section class="admin-actions">
+    <a href="/admin/pizzeria/order/" class="action-card">
+      <div class="action-icon">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <div class="action-title">Управление заказами</div>
+      <div class="action-desc">Просмотр и изменение заказов</div>
+    </a>
+
+    <a href="/admin/pizzeria/pizza/" class="action-card">
+      <div class="action-icon">
+        <i class="fas fa-pizza-slice"></i>
+      </div>
+      <div class="action-title">Управление меню</div>
+      <div class="action-desc">Добавление и редактирование пицц</div>
+    </a>
+
+    <a href="/admin/auth/user/" class="action-card">
+      <div class="action-icon">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <div class="action-title">Управление пользователями</div>
+      <div class="action-desc">Просмотр и редактирование пользователей</div>
+    </a>
+
+    <a href="/admin/pizzeria/feedback/" class="action-card">
+      <div class="action-icon">
+        <i class="fas fa-comments"></i>
+      </div>
+      <div class="action-title">Обратная связь</div>
+      <div class="action-desc">Просмотр сообщений от клиентов</div>
+    </a>
+
+    <a href="/admin/pizzeria/combo/" class="action-card">
+      <div class="action-icon">
+        <i class="fas fa-gift"></i>
+      </div>
+      <div class="action-title">Комбо-предложения</div>
+      <div class="action-desc">Управление комбо-наборами</div>
+    </a>
+
+    <a href="/admin/pizzeria/promotion/" class="action-card">
+      <div class="action-icon">
+        <i class="fas fa-bullhorn"></i>
+      </div>
+      <div class="action-title">Акции</div>
+      <div class="action-desc">Управление акциями и промо</div>
+    </a>
+  </section>
+
+  <!-- Последние заказы -->
+  <section class="recent-orders">
+    <h2 class="section-title">
+      <i class="fas fa-history"></i> Последние заказы
+    </h2>
+
+    {% if recent_orders %}
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Клиент</th>
+          <th>Телефон</th>
+          <th>Сумма</th>
+          <th>Статус</th>
+          <th>Дата</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in recent_orders %}
+        <tr>
+          <td><strong>#{{ order.id }}</strong></td>
+          <td>{{ order.name }}</td>
+          <td>{{ order.phone }}</td>
+          <td>{{ order.total_price }} ₽</td>
+          <td>
+            <span class="status-badge status-{{ order.status }}">
+              {{ order.get_status_display }}
+            </span>
+          </td>
+          <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+          <td>
+            <a
+              href="/admin/pizzeria/order/{{ order.id }}/change/"
+              class="btn btn-sm"
+              style="
+                background: #2196f3;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 4px;
+                text-decoration: none;
+                font-size: 0.85rem;
+              "
+            >
+              <i class="fas fa-edit"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 40px; color: #666">
+      <i
+        class="fas fa-shopping-cart fa-3x"
+        style="color: #ddd; margin-bottom: 20px"
+      ></i>
+      <p>Заказов пока нет</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <div class="admin-nav">
+    <a href="/admin/" class="btn-admin" target="_blank">
+      <i class="fas fa-external-link-alt"></i> Полная админ-панель Django
+    </a>
+    <a href="{% url 'profile' %}" class="btn-secondary">
+      <i class="fas fa-arrow-left"></i> Вернуться в профиль
+    </a>
+  </div>
+</main>
+{% endblock %} {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("DOMContentLoaded", function () {
     function updateStats() {
-        fetch('{% url "admin_stats" %}')
-            .then(response => response.json())
-            .then(data => {
-                document.querySelectorAll('.stat-value')[0].textContent = data.orders_today;
-                document.querySelectorAll('.stat-value')[1].textContent = data.revenue_today + ' ₽';
-                document.querySelectorAll('.stat-value')[2].textContent = data.total_users;
-                document.querySelectorAll('.stat-value')[3].textContent = data.total_pizzas;
-            })
-            .catch(error => console.error('Ошибка обновления статистики:', error));
+      fetch('{% url "admin_stats" %}')
+        .then((response) => response.json())
+        .then((data) => {
+          document.querySelectorAll(".stat-value")[0].textContent =
+            data.orders_today;
+          document.querySelectorAll(".stat-value")[1].textContent =
+            data.revenue_today + " ₽";
+          document.querySelectorAll(".stat-value")[2].textContent =
+            data.total_users;
+          document.querySelectorAll(".stat-value")[3].textContent =
+            data.total_pizzas;
+        })
+        .catch((error) =>
+          console.error("Ошибка обновления статистики:", error)
+        );
     }
-    
+
     setInterval(updateStats, 60000);
-    
-    const actionCards = document.querySelectorAll('.action-card');
-    actionCards.forEach(card => {
-        card.addEventListener('click', function() {
-            actionCards.forEach(c => c.style.borderColor = 'transparent');
-            this.style.borderColor = '#d32f2f';
-        });
+
+    const actionCards = document.querySelectorAll(".action-card");
+    actionCards.forEach((card) => {
+      card.addEventListener("click", function () {
+        actionCards.forEach((c) => (c.style.borderColor = "transparent"));
+        this.style.borderColor = "#d32f2f";
+      });
     });
-});
+  });
 </script>
 {% endblock %}

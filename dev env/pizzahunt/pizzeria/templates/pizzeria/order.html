@@ -1,145 +1,133 @@
-{% extends 'pizzeria/base.html' %}
-{% load static %}
-
-{% block title %}Оформление заказа - Pizzahunt{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/order.css' %}">
-{% endblock %}
-
-{% block content %}
+{% extends 'pizzeria/base.html' %} {% load static %} {% block title %}Оформление
+заказа - Pizzahunt{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/order.css' %}" />
+{% endblock %} {% block content %}
 <section class="order-section">
-    <div class="container">
-        <h1 class="page-title">Оформление заказа</h1>
-        
-        <div class="order-content">
-            <div class="order-form-container">
-                <form method="POST" class="order-form" id="orderForm">
-                    {% csrf_token %}
-                    
-                    <div class="form-section">
-                        <h3><i class="fas fa-user"></i> Ваши данные</h3>
-                        <div class="form-group">
-                            <label for="{{ form.name.id_for_label }}">Имя *</label>
-                            {{ form.name }}
-                            {% if form.name.errors %}
-                            <div class="error">{{ form.name.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="{{ form.phone.id_for_label }}">Телефон *</label>
-                            {{ form.phone }}
-                            {% if form.phone.errors %}
-                            <div class="error">{{ form.phone.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="{{ form.email.id_for_label }}">Email</label>
-                            {{ form.email }}
-                            <small>Для отправки информации о заказе</small>
-                            {% if form.email.errors %}
-                            <div class="error">{{ form.email.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <h3><i class="fas fa-map-marker-alt"></i> Адрес доставки</h3>
-                        <div class="form-group">
-                            <label for="{{ form.address.id_for_label }}">Адрес *</label>
-                            {{ form.address }}
-                            {% if form.address.errors %}
-                            <div class="error">{{ form.address.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="{{ form.comment.id_for_label }}">Комментарий к заказу</label>
-                            {{ form.comment }}
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <h3><i class="fas fa-credit-card"></i> Способ оплаты</h3>
-                        <div class="form-group">
-                            {{ form.payment_method }}
-                            {% if form.payment_method.errors %}
-                            <div class="error">{{ form.payment_method.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <a href="{% url 'cart' %}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Вернуться в корзину
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            Оформить заказ <i class="fas fa-check"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-            <div class="order-summary">
-                <div class="summary-card">
-                    <h3>Ваш заказ</h3>
-                    
-                    <div class="order-items">
-                        {% for item in cart_items %}
-                        <div class="order-item">
-                            <div class="order-item-info">
-                                <h4>{{ item.pizza.name }}</h4>
-                                <p>Размер: {{ item.get_size_display }}</p>
-                                <span class="order-item-quantity">{{ item.quantity }} шт.</span>
-                            </div>
-                            <div class="order-item-price">
-                                {{ item.total_price }} ₽
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    
-                    <div class="order-total">
-                        <div class="total-row">
-                            <span>Товары ({{ cart.total_quantity }} шт.)</span>
-                            <span>{{ cart.total_price }} ₽</span>
-                        </div>
-                        <div class="total-row">
-                            <span>Доставка</span>
-                            <span>
-                                {% if cart.total_price > 1000 %}
-                                <span style="color: #4CAF50;">Бесплатно</span>
-                                {% else %}
-                                200 ₽
-                                {% endif %}
-                            </span>
-                        </div>
-                        <div class="total-divider"></div>
-                        <div class="total-row grand-total">
-                            <span>Итого к оплате</span>
-                            <span class="grand-total-price">
-                                {% if cart.total_price > 1000 %}
-                                {{ cart.total_price }} ₽
-                                {% else %}
-                                {{ cart.total_price|add:200 }} ₽
-                                {% endif %}
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="order-info">
-                        <p><i class="fas fa-clock"></i> Среднее время доставки: 30-45 минут</p>
-                        <p><i class="fas fa-shield-alt"></i> Гарантия качества. Если что-то не так - вернем деньги</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-{% endblock %}
+  <div class="container">
+    <h1 class="page-title">Оформление заказа</h1>
 
-{% block extra_js %}
+    <div class="order-content">
+      <div class="order-form-container">
+        <form method="POST" class="order-form" id="orderForm">
+          {% csrf_token %}
+
+          <div class="form-section">
+            <h3><i class="fas fa-user"></i> Ваши данные</h3>
+            <div class="form-group">
+              <label for="{{ form.name.id_for_label }}">Имя *</label>
+              {{ form.name }} {% if form.name.errors %}
+              <div class="error">{{ form.name.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.phone.id_for_label }}">Телефон *</label>
+              {{ form.phone }} {% if form.phone.errors %}
+              <div class="error">{{ form.phone.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.email.id_for_label }}">Email</label>
+              {{ form.email }}
+              <small>Для отправки информации о заказе</small>
+              {% if form.email.errors %}
+              <div class="error">{{ form.email.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3><i class="fas fa-map-marker-alt"></i> Адрес доставки</h3>
+            <div class="form-group">
+              <label for="{{ form.address.id_for_label }}">Адрес *</label>
+              {{ form.address }} {% if form.address.errors %}
+              <div class="error">{{ form.address.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.comment.id_for_label }}"
+                >Комментарий к заказу</label
+              >
+              {{ form.comment }}
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3><i class="fas fa-credit-card"></i> Способ оплаты</h3>
+            <div class="form-group">
+              {{ form.payment_method }} {% if form.payment_method.errors %}
+              <div class="error">{{ form.payment_method.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a href="{% url 'cart' %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Вернуться в корзину
+            </a>
+            <button type="submit" class="btn btn-primary">
+              Оформить заказ <i class="fas fa-check"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-card">
+          <h3>Ваш заказ</h3>
+
+          <div class="order-items">
+            {% for item in cart_items %}
+            <div class="order-item">
+              <div class="order-item-info">
+                <h4>{{ item.pizza.name }}</h4>
+                <p>Размер: {{ item.get_size_display }}</p>
+                <span class="order-item-quantity">{{ item.quantity }} шт.</span>
+              </div>
+              <div class="order-item-price">{{ item.total_price }} ₽</div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="order-total">
+            <div class="total-row">
+              <span>Товары ({{ cart.total_quantity }} шт.)</span>
+              <span>{{ cart.total_price }} ₽</span>
+            </div>
+            <div class="total-row">
+              <span>Доставка</span>
+              <span>
+                {% if cart.total_price > 1000 %}
+                <span style="color: #4caf50">Бесплатно</span>
+                {% else %} 200 ₽ {% endif %}
+              </span>
+            </div>
+            <div class="total-divider"></div>
+            <div class="total-row grand-total">
+              <span>Итого к оплате</span>
+              <span class="grand-total-price">
+                {% if cart.total_price > 1000 %} {{ cart.total_price }} ₽ {%
+                else %} {{ cart.total_price|add:200 }} ₽ {% endif %}
+              </span>
+            </div>
+          </div>
+
+          <div class="order-info">
+            <p>
+              <i class="fas fa-clock"></i> Среднее время доставки: 30-45 минут
+            </p>
+            <p>
+              <i class="fas fa-shield-alt"></i> Гарантия качества. Если что-то
+              не так - вернем деньги
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block extra_js %}
 <script src="{% static 'js/order.js' %}"></script>
 {% endblock %}

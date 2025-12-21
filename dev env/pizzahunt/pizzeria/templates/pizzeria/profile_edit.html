@@ -1,445 +1,454 @@
-{% extends 'pizzeria/base.html' %}
-{% load static %}
-
-{% block title %}Редактировать профиль - Pizzahunt{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% extends 'pizzeria/base.html' %} {% load static %} {% block title
+%}Редактировать профиль - Pizzahunt{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" />
 <style>
-    .profile-edit-section {
-        padding: 40px 0 80px;
-        min-height: 70vh;
-    }
-    
+  .profile-edit-section {
+    padding: 40px 0 80px;
+    min-height: 70vh;
+  }
+
+  .profile-edit-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .edit-title {
+    margin: 0 0 30px 0;
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+  }
+
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .form-section {
+    padding-bottom: 25px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .form-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .section-title {
+    margin: 0 0 20px 0;
+    font-size: 1.3rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title i {
+    color: #d32f2f;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+  }
+
+  .form-label .required {
+    color: #dc3545;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #d32f2f;
+  }
+
+  .form-textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+
+  .avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+
+  .avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d32f2f;
+    color: white;
+    font-size: 2.5rem;
+  }
+
+  .avatar-upload {
+    flex-grow: 1;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+  }
+
+  .btn-primary {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-primary:hover {
+    background-color: #ff9800;
+  }
+
+  .btn-secondary {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-secondary:hover {
+    background-color: #eee;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .form-checkbox {
+    width: 20px;
+    height: 20px;
+  }
+
+  .messages {
+    margin-bottom: 20px;
+  }
+
+  .alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+
+  .alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  @media (max-width: 768px) {
     .profile-edit-container {
-        max-width: 800px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 15px;
-        padding: 40px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      padding: 30px 20px;
+      margin: 0 15px;
     }
-    
-    .edit-title {
-        margin: 0 0 30px 0;
-        font-size: 1.8rem;
-        color: #333;
-        text-align: center;
-    }
-    
-    .edit-form {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
-    
-    .form-section {
-        padding-bottom: 25px;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .form-section:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-    
-    .section-title {
-        margin: 0 0 20px 0;
-        font-size: 1.3rem;
-        color: #333;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .section-title i {
-        color: #d32f2f;
-    }
-    
+
     .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
+      grid-template-columns: 1fr;
     }
-    
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
-    .form-group.full-width {
-        grid-column: 1 / -1;
-    }
-    
-    .form-label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #555;
-    }
-    
-    .form-label .required {
-        color: #dc3545;
-    }
-    
-    .form-input,
-    .form-textarea,
-    .form-select {
-        width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: border-color 0.3s;
-    }
-    
-    .form-input:focus,
-    .form-textarea:focus,
-    .form-select:focus {
-        outline: none;
-        border-color: #d32f2f;
-    }
-    
-    .form-textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
-    
-    .error-message {
-        color: #dc3545;
-        font-size: 0.875rem;
-        margin-top: 5px;
-    }
-    
+
     .avatar-container {
-        display: flex;
-        align-items: center;
-        gap: 20px;
+      flex-direction: column;
+      align-items: flex-start;
     }
-    
-    .avatar-preview {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        overflow: hidden;
-        background: #f5f5f5;
-    }
-    
-    .avatar-preview img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .avatar-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #d32f2f;
-        color: white;
-        font-size: 2.5rem;
-    }
-    
-    .avatar-upload {
-        flex-grow: 1;
-    }
-    
+
     .form-actions {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-top: 30px;
-        padding-top: 30px;
-        border-top: 1px solid #eee;
+      flex-direction: column;
     }
-    
-    .btn-primary {
-        background-color: #d32f2f;
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    
-    .btn-primary:hover {
-        background-color: #ff9800;
-    }
-    
+
+    .btn-primary,
     .btn-secondary {
-        background-color: #f5f5f5;
-        color: #333;
-        border: 1px solid #ddd;
-        padding: 12px 30px;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s;
+      width: 100%;
     }
-    
-    .btn-secondary:hover {
-        background-color: #eee;
-    }
-    
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .form-checkbox {
-        width: 20px;
-        height: 20px;
-    }
-    
-    .messages {
-        margin-bottom: 20px;
-    }
-    
-    .alert {
-        padding: 12px 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .alert-success {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
-    }
-    
-    .alert-error {
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
-    }
-    
-    @media (max-width: 768px) {
-        .profile-edit-container {
-            padding: 30px 20px;
-            margin: 0 15px;
-        }
-        
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .avatar-container {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .form-actions {
-            flex-direction: column;
-        }
-        
-        .btn-primary,
-        .btn-secondary {
-            width: 100%;
-        }
-    }
+  }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <section class="profile-edit-section">
-    <div class="container">
-        <div class="profile-edit-container">
-            <h1 class="edit-title">Редактировать профиль</h1>
-            
-            {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
-                    {{ message }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            
-            <form method="post" enctype="multipart/form-data" class="edit-form">
-                {% csrf_token %}
-                
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-user"></i> Основная информация
-                    </h2>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="id_username" class="form-label">
-                                Имя пользователя <span class="required">*</span>
-                            </label>
-                            {{ user_form.username }}
-                            {% if user_form.username.errors %}
-                            <div class="error-message">{{ user_form.username.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_email" class="form-label">
-                                Email <span class="required">*</span>
-                            </label>
-                            {{ user_form.email }}
-                            {% if user_form.email.errors %}
-                            <div class="error-message">{{ user_form.email.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_first_name" class="form-label">Имя</label>
-                            {{ user_form.first_name }}
-                            {% if user_form.first_name.errors %}
-                            <div class="error-message">{{ user_form.first_name.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_last_name" class="form-label">Фамилия</label>
-                            {{ user_form.last_name }}
-                            {% if user_form.last_name.errors %}
-                            <div class="error-message">{{ user_form.last_name.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-address-book"></i> Контактная информация
-                    </h2>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="id_phone" class="form-label">Телефон</label>
-                            {{ profile_form.phone }}
-                            {% if profile_form.phone.errors %}
-                            <div class="error-message">{{ profile_form.phone.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label for="id_address" class="form-label">Адрес доставки</label>
-                            {{ profile_form.address }}
-                            {% if profile_form.address.errors %}
-                            <div class="error-message">{{ profile_form.address.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_birth_date" class="form-label">Дата рождения</label>
-                            {{ profile_form.birth_date }}
-                            {% if profile_form.birth_date.errors %}
-                            <div class="error-message">{{ profile_form.birth_date.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Аватар -->
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-camera"></i> Аватар профиля
-                    </h2>
-                    
-                    <div class="avatar-container">
-                        <div class="avatar-preview">
-                            {% if user.profile.avatar %}
-                                <img src="{{ user.profile.avatar.url }}" alt="Текущий аватар" id="avatarPreview">
-                            {% else %}
-                                <div class="avatar-placeholder" id="avatarPlaceholder">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="avatar-upload">
-                            <div class="form-group">
-                                <label for="id_avatar" class="form-label">Загрузить новое фото</label>
-                                {{ profile_form.avatar }}
-                                {% if profile_form.avatar.errors %}
-                                <div class="error-message">{{ profile_form.avatar.errors }}</div>
-                                {% endif %}
-                                <small class="help-text">Рекомендуемый размер: 200x200px. Форматы: JPG, PNG.</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Кнопки -->
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-save"></i> Сохранить изменения
-                    </button>
-                    <a href="{% url 'profile' %}" class="btn-secondary">
-                        <i class="fas fa-times"></i> Отмена
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-{% endblock %}
+  <div class="container">
+    <div class="profile-edit-container">
+      <h1 class="edit-title">Редактировать профиль</h1>
 
-{% block extra_js %}
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          <i
+            class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"
+          ></i>
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" class="edit-form">
+        {% csrf_token %}
+
+        <div class="form-section">
+          <h2 class="section-title">
+            <i class="fas fa-user"></i> Основная информация
+          </h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="id_username" class="form-label">
+                Имя пользователя <span class="required">*</span>
+              </label>
+              {{ user_form.username }} {% if user_form.username.errors %}
+              <div class="error-message">{{ user_form.username.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="id_email" class="form-label">
+                Email <span class="required">*</span>
+              </label>
+              {{ user_form.email }} {% if user_form.email.errors %}
+              <div class="error-message">{{ user_form.email.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="id_first_name" class="form-label">Имя</label>
+              {{ user_form.first_name }} {% if user_form.first_name.errors %}
+              <div class="error-message">{{ user_form.first_name.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="id_last_name" class="form-label">Фамилия</label>
+              {{ user_form.last_name }} {% if user_form.last_name.errors %}
+              <div class="error-message">{{ user_form.last_name.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2 class="section-title">
+            <i class="fas fa-address-book"></i> Контактная информация
+          </h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="id_phone" class="form-label">Телефон</label>
+              {{ profile_form.phone }} {% if profile_form.phone.errors %}
+              <div class="error-message">{{ profile_form.phone.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group full-width">
+              <label for="id_address" class="form-label">Адрес доставки</label>
+              {{ profile_form.address }} {% if profile_form.address.errors %}
+              <div class="error-message">{{ profile_form.address.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="id_birth_date" class="form-label"
+                >Дата рождения</label
+              >
+              {{ profile_form.birth_date }} {% if profile_form.birth_date.errors
+              %}
+              <div class="error-message">
+                {{ profile_form.birth_date.errors }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Аватар -->
+        <div class="form-section">
+          <h2 class="section-title">
+            <i class="fas fa-camera"></i> Аватар профиля
+          </h2>
+
+          <div class="avatar-container">
+            <div class="avatar-preview">
+              {% if user.profile.avatar %}
+              <img
+                src="{{ user.profile.avatar.url }}"
+                alt="Текущий аватар"
+                id="avatarPreview"
+              />
+              {% else %}
+              <div class="avatar-placeholder" id="avatarPlaceholder">
+                <i class="fas fa-user"></i>
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="avatar-upload">
+              <div class="form-group">
+                <label for="id_avatar" class="form-label"
+                  >Загрузить новое фото</label
+                >
+                {{ profile_form.avatar }} {% if profile_form.avatar.errors %}
+                <div class="error-message">
+                  {{ profile_form.avatar.errors }}
+                </div>
+                {% endif %}
+                <small class="help-text"
+                  >Рекомендуемый размер: 200x200px. Форматы: JPG, PNG.</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Кнопки -->
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i> Сохранить изменения
+          </button>
+          <a href="{% url 'profile' %}" class="btn-secondary">
+            <i class="fas fa-times"></i> Отмена
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("DOMContentLoaded", function () {
     // Предпросмотр аватара перед загрузкой
-    const avatarInput = document.getElementById('id_avatar');
-    const avatarPreview = document.getElementById('avatarPreview');
-    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-    
+    const avatarInput = document.getElementById("id_avatar");
+    const avatarPreview = document.getElementById("avatarPreview");
+    const avatarPlaceholder = document.getElementById("avatarPlaceholder");
+
     if (avatarInput) {
-        avatarInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (avatarPreview) {
-                        avatarPreview.src = e.target.result;
-                    } else if (avatarPlaceholder) {
-                        const newImg = document.createElement('img');
-                        newImg.src = e.target.result;
-                        newImg.alt = 'Предпросмотр аватара';
-                        newImg.style.width = '100%';
-                        newImg.style.height = '100%';
-                        newImg.style.objectFit = 'cover';
-                        
-                        avatarPlaceholder.parentNode.replaceChild(newImg, avatarPlaceholder);
-                    }
-                };
-                reader.readAsDataURL(file);
+      avatarInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            if (avatarPreview) {
+              avatarPreview.src = e.target.result;
+            } else if (avatarPlaceholder) {
+              const newImg = document.createElement("img");
+              newImg.src = e.target.result;
+              newImg.alt = "Предпросмотр аватара";
+              newImg.style.width = "100%";
+              newImg.style.height = "100%";
+              newImg.style.objectFit = "cover";
+
+              avatarPlaceholder.parentNode.replaceChild(
+                newImg,
+                avatarPlaceholder
+              );
             }
-        });
+          };
+          reader.readAsDataURL(file);
+        }
+      });
     }
-    
-    const phoneInput = document.getElementById('id_phone');
+
+    const phoneInput = document.getElementById("id_phone");
     if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 0) {
-                if (value.length <= 3) {
-                    value = `+${value}`;
-                } else if (value.length <= 6) {
-                    value = `+${value.slice(0,3)} (${value.slice(3)}`;
-                } else if (value.length <= 8) {
-                    value = `+${value.slice(0,3)} (${value.slice(3,6)}) ${value.slice(6)}`;
-                } else {
-                    value = `+${value.slice(0,3)} (${value.slice(3,6)}) ${value.slice(6,9)}-${value.slice(9,11)}-${value.slice(11,13)}`;
-                }
-            }
-            e.target.value = value;
-        });
+      phoneInput.addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 0) {
+          if (value.length <= 3) {
+            value = `+${value}`;
+          } else if (value.length <= 6) {
+            value = `+${value.slice(0, 3)} (${value.slice(3)}`;
+          } else if (value.length <= 8) {
+            value = `+${value.slice(0, 3)} (${value.slice(3, 6)}) ${value.slice(
+              6
+            )}`;
+          } else {
+            value = `+${value.slice(0, 3)} (${value.slice(3, 6)}) ${value.slice(
+              6,
+              9
+            )}-${value.slice(9, 11)}-${value.slice(11, 13)}`;
+          }
+        }
+        e.target.value = value;
+      });
     }
-});
+  });
 </script>
 {% endblock %}
