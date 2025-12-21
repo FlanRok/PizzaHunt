@@ -1,0 +1,38 @@
+{% extends 'pizzeria/base.html' %}
+{% load static %}
+
+{% block title %}Pizzahunt - Главная{% endblock %}
+
+ {% block extra_css %} <link rel="stylesheet" href="{% static 'css/index.css' %}"> {% endblock %}
+
+{% block content %}
+<!-- Герой секция -->
+<section class="hero">
+    <div class="container hero-content">
+        <h1>Охотитесь за вкуснейшей пиццей? Вы нашли!</h1>
+        <p>Только свежие ингредиенты, итальянские рецепты и доставка за 30 минут. Более 50 видов пиццы на ваш выбор.</p>
+        <div class="hero-btns">
+            <a href="#" class="hero-btn">Смотреть меню</a>
+            <a href="#stock" class="hero-btn secondary">Акции недели</a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Описание секция -->
+<section class="section description-section" id="Описание">
+    <div class="container description-container">
+        <div class="description-img">
+            <img src="{% static 'images/description.png' %}" alt="Пицца от Pizzahunt">
+        </div>
+        <div class="description-content">
+            <h2>Почему выбирают нас?</h2>
+            <p>Мы используем только свежие ингредиенты: итальянскую муку, настоящий сыр моцарелла, томаты из солнечной Италии и домашние соусы по традиционным рецептам.</p>
+            <p>Наши пиццы готовятся в дровяной печи при температуре 400°C, что гарантирует тонкую хрустящую корочку и неповторимый вкус.</p>
+            <p>Доставка по городу занимает не более 30 минут. Если мы опоздаем — вы получаете пиццу бесплатно!</p>
+            <a href="#" class="btn">Подробнее о нас</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% load static %}
+<header class="header">
+  <div class="container header-container">
+    <a href="{% url 'home' %}" class="logo">
+      <div class="logo-icon"><i class="fas fa-pizza-slice"></i></div>
+      <div class="logo-text">Pizza<span>hunt</span></div>
+    </a>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a
+            href="{% url 'home' %}"
+            class="nav-link {% if request.path == '/' %}active{% endif %}"
+            >Главная</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            href="#"
+            class="nav-link {% if request.path == '/menu/' %}active{% endif %}"
+            >Меню</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            href="#"
+            class="nav-link {% if request.path == '/about/' %}active{% endif %}"
+            >О нас</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            href="#"
+            class="nav-link {% if request.path == '/feedback/' %}active{% endif %}"
+            >Обратная связь</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+   <div class="header-actions">
+                <button class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </button>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+  </div>
+</header>
