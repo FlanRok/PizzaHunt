@@ -1,12 +1,13 @@
 /* Герой секция О нас */
 .about-hero {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../images/about-hero.jpg");
     background-size: cover;
     background-position: center;
     color: var(--text-light);
     padding: 120px 0;
     text-align: center;
-    background-color: #333; /* Fallback цвет */
+    background-color: #333; 
 }
 
 .about-hero-content {

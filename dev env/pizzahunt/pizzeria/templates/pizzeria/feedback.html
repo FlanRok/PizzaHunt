@@ -1,11 +1,170 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'pizzeria/base.html' %}
+{% load static %}
+
+{% block title %}Обратная связь - Pizzahunt{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Обратная связь</h2>
+            <p>Мы ценим ваше мнение и всегда готовы помочь. Заполните форму ниже, и мы ответим вам в ближайшее время.</p>
+        </div>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="feedback-content">
+            <div class="feedback-form-container">
+                <h3 class="form-title">Напишите нам</h3>
+                
+                <form method="post" id="feedbackForm" class="feedback-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="id_name" class="form-label">Ваше имя <span class="required">*</span></label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <div class="error-message">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_email" class="form-label">Email <span class="required">*</span></label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="error-message">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_phone" class="form-label">Телефон</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                        <div class="error-message">{{ form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_subject" class="form-label">Тема обращения <span class="required">*</span></label>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}
+                        <div class="error-message">{{ form.subject.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_message" class="form-label">Сообщение <span class="required">*</span></label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                        <div class="error-message">{{ form.message.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="privacy" name="privacy" required>
+                        <label for="privacy">Я согласен на обработку персональных данных в соответствии с <a href="#">Политикой конфиденциальности</a></label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-block">Отправить сообщение</button>
+                        <button type="reset" class="btn btn-secondary">Очистить форму</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Информационная панель -->
+            <div class="info-panel">
+                <div class="contact-info-card">
+                    <h3 class="contact-info-title"><i class="fas fa-info-circle"></i> Контактная информация</h3>
+                    <ul class="contact-info-list">
+                        <li class="contact-info-item">
+                            <div class="contact-info-icon"><i class="fas fa-phone"></i></div>
+                            <div class="contact-info-content">
+                                <h4>Телефон</h4>
+                                <p><a href="tel:+74951234567">+7 (999) 123-45-67</a></p>
+                                <p>Круглосуточная горячая линия</p>
+                            </div>
+                        </li>
+                        <li class="contact-info-item">
+                            <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="contact-info-content">
+                                <h4>Email</h4>
+                                <p><a href="mailto:feedback@pizzahunt.ru">order@pizzahunt.ru</a></p>
+                                <p>Для предложений и жалоб</p>
+                            </div>
+                        </li>
+                        <li class="contact-info-item">
+                            <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
+                            <div class="contact-info-content">
+                                <h4>Время ответа</h4>
+                                <p>Понедельник - Пятница: 10:00 - 23:00</p>
+                                <p>Суббота - Воскресенье: 10:00 - 20:00</p>
+                            </div>
+                        </li>
+                        <li class="contact-info-item">
+                            <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="contact-info-content">
+                                <h4>Адрес офиса</h4>
+                                <p>ул. Пиццерийная, 19, г. Ульяновск</p>
+                                <p>Прием посетителей: с 10:00 до 23:00</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="faq-card">
+                    <h3 class="faq-title"><i class="fas fa-question-circle"></i> Частые вопросы</h3>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <h4 class="faq-question">Сколько времени занимает ответ на обращение?</h4>
+                            <p class="faq-answer">Мы стараемся отвечать на все обращения в течение 24 часов в рабочие дни. В выходные ответ может занять до 48 часов.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4 class="faq-question">Как я могу отменить или изменить заказ?</h4>
+                            <p class="faq-answer">Позвоните по телефону горячей линии как можно скорее. Если заказ уже отправлен в доставку, изменения могут быть невозможны.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4 class="faq-question">Что делать, если я нашел в заказе проблему?</h4>
+                            <p class="faq-answer">Сфотографируйте проблему и свяжитесь с нами по телефону или через эту форму. Мы оперативно решим вопрос.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const feedbackForm = document.getElementById('feedbackForm');
+    const privacyCheckbox = document.getElementById('privacy');
     
-</body>
-</html>
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', function(e) {
+            if (!privacyCheckbox.checked) {
+                e.preventDefault();
+                alert('Пожалуйста, согласитесь с обработкой персональных данных');
+                return false;
+            }
+            
+            return true;
+        });
+    }
+});
+</script>
+{% endblock %}
