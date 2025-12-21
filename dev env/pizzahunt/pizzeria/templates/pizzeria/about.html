@@ -1,0 +1,174 @@
+{% extends 'pizzeria/base.html' %}
+{% load static %}
+
+{% block title %}
+Pizzahunt - О нас
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Герой секция О нас -->
+    <section class="about-hero">
+        <div class="container about-hero-content">
+            <h1>Наша история любви к пицце</h1>
+            <p>С 2010 года мы создаем лучшую пиццу в городе, используя традиционные рецепты и самые свежие ингредиенты</p>
+        </div>
+    </section>
+    
+    <!-- История компании -->
+    <section class="history-section">
+        <div class="container">
+            <div class="history-container">
+                <div class="history-img">
+                    <img src="{% static 'images/about.png' %}" alt="Первая пиццерия Pizzahunt">
+                </div>
+                <div class="history-content">
+                    <h2>Как все начиналось</h2>
+                    <p>В 2010 году два друга, Вася 1 и Вася 2, открыли небольшую пиццерию на окраине города. У них была мечта - привнести настоящий итальянский вкус пиццы в наш город. Начав с маленькой кухни и всего трех видов пиццы, они каждый день старались совершенствовать рецепты.</p>
+                    <p>Их преданность качеству и любовь к традициям быстро принесли успех. Уже через год они открыли второй зал, а сегодня Pizzahunt - это сеть пиццерий по всему городу и служба доставки, которая ежедневно радует тысячи клиентов.</p>
+                    
+                    <div class="history-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">13+</span>
+                            <span class="stat-text">Лет на рынке</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">52+</span>
+                            <span class="stat-text">Видов пиццы</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">5</span>
+                            <span class="stat-text">Ресторанов</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Наши ценности -->
+    <section class="values-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Наши ценности</h2>
+                <p>Что делает нашу пиццу особенной</p>
+            </div>
+            
+            <div class="values-grid">
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="value-title">Свежие ингредиенты</h3>
+                    <p class="value-description">Мы используем только свежие продукты: итальянскую муку, настоящий сыр моцарелла, томаты из солнечной Италии и домашние соусы по традиционным рецептам.</p>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3 class="value-title">Дровяная печь</h3>
+                    <p class="value-description">Наши пиццы готовятся в дровяной печи при температуре 400°C, что гарантирует тонкую хрустящую корочку и неповторимый вкус настоящей итальянской пиццы.</p>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="value-title">С любовью</h3>
+                    <p class="value-description">Каждую пиццу мы готовим с любовью и вниманием к деталям. Наши повара проходили обучение в Италии и знают все секреты приготовления идеальной пиццы.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Команда -->
+    <section class="team-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Наша команда</h2>
+                <p>Профессионалы, которые делают вашу пиццу идеальной</p>
+            </div>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{% static 'images/about-team.jpg' %}" alt="Антонио Рицци">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Антонио Рицци</h3>
+                        <p class="member-role">Шеф-повар, сооснователь</p>
+                        <p class="member-description">Родился в Барыше, учился искусству пиццы у своего деда. В Pizzahunt отвечает за разработку рецептов и контроль качества.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{% static 'images/about-team.jpg' %}" alt="Мария Конти">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Мария Конти</h3>
+                        <p class="member-role">Управляющая</p>
+                        <p class="member-description">Пришла в команду в 2015 году. Следит за безупречной работой ресторанов и высоким уровнем сервиса.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{% static 'images/about-team.jpg' %}" alt="Марко Бьянки">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Марко Бьянки</h3>
+                        <p class="member-role">Сооснователь, директор по развитию</p>
+                        <p class="member-description">Отвечает за развитие сети и доставку. Его цель - чтобы лучшая пицца была доступна в каждом районе города.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Галерея -->
+    <section class="gallery-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Наша кухня</h2>
+                <p>Загляните за кулисы Pizzahunt</p>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="{% static 'images/gallery1.png' %}" alt="Приготовление пиццы">
+                </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/gallery2.png' %}" alt="Дровяная печь">
+                </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/gallery3.jpg' %}" alt="Ингредиенты">
+                </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/gallery4.jpg' %}" alt="Готовая пицца">
+                </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/gallery5.jpg' %}" alt="Интерьер пиццерии">
+                </div>
+                <div class="gallery-item">
+                    <img src="{% static 'images/gallery6.jpg' %}" alt="Свежая пицца">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA секция -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Попробуйте нашу пиццу</h2>
+            <p>Убедитесь сами, почему нас выбирают тысячи клиентов каждый день. Закажите пиццу онлайн или посетите один из наших ресторанов.</p>
+            <div class="cta-btns">
+                <a href="{% url 'menu' %}" class="cta-btn">Смотреть меню</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

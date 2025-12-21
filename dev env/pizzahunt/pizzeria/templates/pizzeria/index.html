@@ -12,12 +12,41 @@
         <h1>Охотитесь за вкуснейшей пиццей? Вы нашли!</h1>
         <p>Только свежие ингредиенты, итальянские рецепты и доставка за 30 минут. Более 50 видов пиццы на ваш выбор.</p>
         <div class="hero-btns">
-            <a href="#" class="hero-btn">Смотреть меню</a>
+            <a href="{% url 'menu' %}" class="hero-btn">Смотреть меню</a>
             <a href="#stock" class="hero-btn secondary">Акции недели</a>
         </div>
     </div>
 </section>
 
+<!-- Секция комбо -->
+<section class="section combo-section" id="combo">
+    <div class="container">
+        <div class="section-title">
+            <h2>Комбо-предложения</h2>
+            <p>Выгодные наборы для компании или семьи</p>
+        </div>
+        
+        <div class="combo-grid">
+            {% for combo in combos %}
+            <div class="combo-item">
+                <div class="combo-img">
+                    <img src="{{ combo.image.url }}" alt="{{ combo.name }}">
+                </div>
+                <div class="combo-content">
+                    <h3 class="combo-title">{{ combo.name }}</h3>
+                    <p class="combo-description">{{ combo.description }}</p>
+                    <div class="combo-price">
+                        <div class="price">{{ combo.price }} ₽</div>
+                        <button class="add-to-cart"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Комбо пока нет в меню</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 
 <!-- Описание секция -->
 <section class="section description-section" id="Описание">
@@ -30,9 +59,75 @@
             <p>Мы используем только свежие ингредиенты: итальянскую муку, настоящий сыр моцарелла, томаты из солнечной Италии и домашние соусы по традиционным рецептам.</p>
             <p>Наши пиццы готовятся в дровяной печи при температуре 400°C, что гарантирует тонкую хрустящую корочку и неповторимый вкус.</p>
             <p>Доставка по городу занимает не более 30 минут. Если мы опоздаем — вы получаете пиццу бесплатно!</p>
-            <a href="#" class="btn">Подробнее о нас</a>
+            <a href="{% url 'about' %}" class="btn">Подробнее о нас</a>
         </div>
     </div>
 </section>
 
+<!-- Секция новинок -->
+<section class="section new-section" id="new">
+    <div class="container">
+        <div class="section-title">
+            <h2>Новички в меню</h2>
+            <p>Попробуйте наши новые вкусы</p>
+        </div>
+        
+        <div class="new-grid">
+            {% for pizza in new_pizzas %}
+            <div class="new-item">
+                <div class="new-badge">NEW</div>
+                <div class="new-icon"><i class="fas fa-pepper-hot"></i></div>
+                <h3 class="new-title">{{ pizza.name }}</h3>
+                <p class="new-description">{{ pizza.description|truncatechars:100 }}</p>
+            </div>
+            {% empty %}
+            <p>Новых пицц пока нет</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Секция акций -->
+<section class="section stock-section" id="stock">
+    <div class="container">
+        <div class="section-title">
+            <h2>Горячие акции</h2>
+            <p>Успейте воспользоваться выгодными предложениями</p>
+        </div>
+        
+        <div class="stock-grid">
+            {% for promotion in promotions %}
+            <div class="stock-item">
+                <div class="stock-img">
+                    <img src="{{ promotion.image.url }}" alt="{{ promotion.title }}">
+                </div>
+                <div class="stock-content">
+                    <h3 class="stock-title">{{ promotion.title }}</h3>
+                    <p class="stock-description">{{ promotion.description|truncatechars:150 }}</p>
+                    <div class="stock-timer">
+                        <div class="timer-item">
+                            <span class="timer-value">{% now "d" %}</span>
+                            <span class="timer-label">дней</span>
+                        </div>
+                        <div class="timer-item">
+                            <span class="timer-value">{% now "H" %}</span>
+                            <span class="timer-label">часов</span>
+                        </div>
+                        <div class="timer-item">
+                            <span class="timer-value">{% now "i" %}</span>
+                            <span class="timer-label">минут</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Акций пока нет</p>
+            {% endfor %}
+        </div>
+        
+        <div class="show-more" id="button">
+            <a href="#" class="btn">Все акции</a>
+        </div>
+    </div>
+</section>
 {% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'pizzeria/base.html' %}
+{% load static %}
+
+{% block title %}Pizzahunt - Меню{% endblock %}
+
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/menu.css' %}">{% endblock %}
+
+{% block content %}
+<!-- Герой секция меню -->
+<section class="menu-hero">
+    <div class="container menu-hero-content">
+        <h1>Наше меню</h1>
+        <p>Более 50 видов пиццы на любой вкус. Только свежие ингредиенты и итальянские рецепты.</p>
+    </div>
+</section>
+
+<!-- Фильтры и категории -->
+<section class="menu-filters">
+    <div class="container filters-container">
+        <div class="categories" id="categories">
+            <button class="category-btn {% if selected_category == 'all' %}active{% endif %}" data-category="all">Все пиццы</button>
+            <button class="category-btn {% if selected_category == 'meat' %}active{% endif %}" data-category="meat">Мясные</button>
+            <button class="category-btn {% if selected_category == 'cheese' %}active{% endif %}" data-category="cheese">Сырные</button>
+            <button class="category-btn {% if selected_category == 'vegetarian' %}active{% endif %}" data-category="vegetarian">Вегетарианские</button>
+            <button class="category-btn {% if selected_category == 'spicy' %}active{% endif %}" data-category="spicy">Острые</button>
+            <button class="category-btn {% if selected_category == 'special' %}active{% endif %}" data-category="special">Специальные</button>
+        </div>
+        
+        <div class="filter-options">
+            <select class="sort-select" id="sortSelect">
+                <option value="popular" {% if selected_sort == 'popular' %}selected{% endif %}>По популярности</option>
+                <option value="price-asc" {% if selected_sort == 'price-asc' %}selected{% endif %}>По цене (сначала дешевые)</option>
+                <option value="price-desc" {% if selected_sort == 'price-desc' %}selected{% endif %}>По цене (сначала дорогие)</option>
+                <option value="name" {% if selected_sort == 'name' %}selected{% endif %}>По названию</option>
+            </select>
+            
+            <div class="view-toggle">
+                <button class="view-btn active" id="gridViewBtn" title="Сетка">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="view-btn" id="listViewBtn" title="Список">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Основное содержимое -->
+<section class="section">
+    <div class="container">
+        <div class="pizza-grid" id="pizzaGrid">
+            {% for pizza in pizzas %}
+            <div class="pizza-item" 
+                 data-category="{% if pizza.is_vegetarian %}vegetarian{% endif %} {% if pizza.is_spicy %}spicy{% endif %} {% if pizza.is_popular or pizza.is_new %}special{% endif %}" 
+                 data-price="{{ pizza.price_30 }}">
+                <div class="pizza-img">
+                    <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}">
+                    {% if pizza.is_new %}
+                    <div class="pizza-badge new">Новинка</div>
+                    {% elif pizza.is_popular %}
+                    <div class="pizza-badge">Хит</div>
+                    {% endif %}
+                </div>
+                <div class="pizza-content">
+                    <div class="pizza-header">
+                        <h3 class="pizza-title">{{ pizza.name }}</h3>
+                        <div class="pizza-price">{{ pizza.price_30 }} ₽</div>
+                    </div>
+                    <p class="pizza-description">{{ pizza.description }}</p>
+                    <div class="pizza-ingredients">
+                        <div class="ingredients-title">Состав:</div>
+                        <div class="ingredients-list">
+                            {% for ingredient in pizza.ingredients.split|slice:":4" %}
+                            <span class="ingredient">{{ ingredient }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="pizza-footer">
+                        <div class="pizza-sizes">
+                            <button class="size-btn active" data-size="30" data-price="{{ pizza.price_30 }}">30 см</button>
+                            <button class="size-btn" data-size="35" data-price="{{ pizza.price_35 }}">35 см</button>
+                            <button class="size-btn" data-size="40" data-price="{{ pizza.price_40 }}">40 см</button>
+                        </div>
+                        <button class="add-to-cart-btn" data-id="{{ pizza.id }}" data-name="{{ pizza.name }}">
+                            <i class="fas fa-plus"></i> В корзину
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-pizzas">
+                <h3>Пиццы не найдены</h3>
+                <p>Попробуйте изменить параметры фильтрации</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const category = this.dataset.category;
+            const url = new URL(window.location.href);
+            url.searchParams.set('category', category);
+            window.location.href = url.toString();
+        });
+    });
+    
+    // Сортировка
+    const sortSelect = document.getElementById('sortSelect');
+    sortSelect.addEventListener('change', function() {
+        const sort = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', sort);
+        window.location.href = url.toString();
+    });
+    
+    // Переключение вида
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    const listViewBtn = document.getElementById('listViewBtn');
+    const pizzaGrid = document.getElementById('pizzaGrid');
+    
+    gridViewBtn.addEventListener('click', function() {
+        this.classList.add('active');
+        listViewBtn.classList.remove('active');
+        pizzaGrid.classList.remove('list-view');
+    });
+    
+    listViewBtn.addEventListener('click', function() {
+        this.classList.add('active');
+        gridViewBtn.classList.remove('active');
+        pizzaGrid.classList.add('list-view');
+    });
+});
+</script>
+{% endblock %}

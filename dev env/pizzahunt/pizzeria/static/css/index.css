@@ -1,6 +1,6 @@
 /* Герой секция */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://img.freepik.com/free-photo/delicious-pizza-studio_23-2151846545.jpg?semt=ais_hybrid&w=740');
     background-size: cover;
     background-position: center;
     color: var(--text-light);
@@ -58,6 +58,90 @@
     color: var(--text-dark);
 }
 
+/* Секция комбо */
+.combo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.combo-item {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.combo-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+}
+
+.combo-img {
+    height: 200px;
+    overflow: hidden;
+}
+
+.combo-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.combo-item:hover .combo-img img {
+    transform: scale(1.05);
+}
+
+.combo-content {
+    padding: 20px;
+}
+
+.combo-title {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.combo-description {
+    color: var(--text-gray);
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.combo-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-red);
+}
+
+.add-to-cart {
+    background-color: var(--primary-red);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.add-to-cart:hover {
+    background-color: var(--primary-orange);
+    transform: rotate(90deg);
+}
+
 /* Описание секция */
 .description-section {
     background-color: var(--dark-bg);
@@ -95,7 +179,134 @@
     opacity: 0.9;
 }
 
-/* Адаптивность для главной */
+/* Секция новинок */
+.new-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.new-item {
+    background-color: var(--light-bg);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.new-item:hover {
+    transform: translateY(-5px);
+}
+
+.new-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--primary-orange);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.new-icon {
+    font-size: 3rem;
+    color: var(--primary-red);
+    margin-bottom: 20px;
+}
+
+.new-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.new-description {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+}
+
+/* Секция акций */
+.stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.stock-item {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.stock-item:hover {
+    transform: translateY(-5px);
+}
+
+.stock-img {
+    height: 200px;
+    overflow: hidden;
+}
+
+.stock-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.stock-content {
+    padding: 25px;
+}
+
+.stock-title {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.stock-description {
+    color: var(--text-gray);
+    margin-bottom: 15px;
+}
+
+.stock-timer {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.timer-item {
+    background-color: var(--primary-red);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    text-align: center;
+    min-width: 50px;
+}
+
+.timer-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: block;
+}
+
+.timer-label {
+    font-size: 0.8rem;
+    display: block;
+}
+
+/* Кнопка "Показать больше" */
+.show-more {
+    text-align: center;
+    margin-top: 50px;
+}
+
 @media (max-width: 992px) {
     .description-container {
         grid-template-columns: 1fr;
@@ -129,5 +340,9 @@
     .hero-btns {
         flex-direction: column;
         align-items: center;
+    }
+    
+    .combo-grid, .new-grid, .stock-grid {
+        grid-template-columns: 1fr;
     }
 }
