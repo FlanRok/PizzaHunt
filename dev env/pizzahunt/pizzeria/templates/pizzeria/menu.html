@@ -169,43 +169,43 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Функция добавления в корзину
     function addToCart(pizzaId, size, quantity, pizzaName) {
-        fetch('{% url "add_to_cart" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: `pizza_id=${pizzaId}&size=${size}&quantity=${quantity}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification(`"${pizzaName}" добавлена в корзину!`);
+    fetch('{% url "add_to_cart" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: `item_type=pizza&item_id=${pizzaId}&size=${size}&quantity=${quantity}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(`"${pizzaName}" добавлена в корзину!`);
+            
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = data.cart_quantity;
+            });
+
+            const btn = document.querySelector(`.add-to-cart-btn[data-id="${pizzaId}"]`);
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-check"></i> В корзине';
+                btn.style.backgroundColor = '#4CAF50';
                 
-                document.querySelectorAll('.cart-count').forEach(el => {
-                    el.textContent = data.cart_quantity;
-                });
-                
-                const btn = document.querySelector(`.add-to-cart-btn[data-id="${pizzaId}"]`);
-                if (btn) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> В корзине';
-                    btn.style.backgroundColor = '#4CAF50';
-                    
-                    setTimeout(() => {
-                        btn.innerHTML = '<i class="fas fa-plus"></i> В корзину';
-                        btn.style.backgroundColor = '';
-                    }, 2000);
-                }
-            } else {
-                showNotification(data.message, 'error');
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-plus"></i> В корзину';
+                    btn.style.backgroundColor = '';
+                }, 2000);
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Произошла ошибка', 'error');
-        });
-    }
+        } else {
+            showNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Происзошла ошибка', 'error');
+    });
+}
     
     // Функция показа уведомления
     function showNotification(message, type = 'success') {

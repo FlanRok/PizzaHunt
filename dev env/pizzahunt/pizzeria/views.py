@@ -41,14 +41,12 @@ class MenuView(ListView):
             elif category == 'spicy':
                 queryset = queryset.filter(is_spicy=True)
             elif category == 'cheese':
-                # Ищем категорию "Сырные" в базе данных
                 from .models import Category
                 try:
                     cheese_category = Category.objects.filter(name__icontains='сыр').first()
                     if cheese_category:
                         queryset = queryset.filter(category=cheese_category)
                     else:
-                        # Если категории нет, ищем по названию/описанию
                         queryset = queryset.filter(
                             Q(name__icontains='сыр') | 
                             Q(description__icontains='сыр')
@@ -65,7 +63,7 @@ class MenuView(ListView):
             queryset = queryset.order_by('-price_30')
         elif sort == 'name':
             queryset = queryset.order_by('name')
-        else:  # popular
+        else:  
             queryset = queryset.order_by('-is_popular', 'order')
         
         return queryset
@@ -92,11 +90,17 @@ def cart_view(request):
 
 def add_to_cart_view(request):
     if request.method == 'POST':
-        pizza_id = request.POST.get('pizza_id')
-        size = request.POST.get('size', '30')
+        item_type = request.POST.get('item_type')
+        item_id = request.POST.get('item_id')
         quantity = int(request.POST.get('quantity', 1))
         
-        success, message = add_to_cart(request, pizza_id, size, quantity)
+        if item_type == 'pizza':
+            size = request.POST.get('size', '30')
+            success, message = add_to_cart(request, 'pizza', item_id, size, quantity)
+        elif item_type == 'combo':
+            success, message = add_to_cart(request, 'combo', item_id, quantity=quantity)
+        else:
+            success, message = False, "Неизвестный тип товара"
         
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             cart = get_cart(request)
@@ -194,62 +198,56 @@ class OrderCreateView(CreateView):
             messages.error(self.request, 'Ваша корзина пуста!')
             return redirect('cart')
         
-        # Сохраняем заказ
         order = form.save(commit=False)
         order.cart = cart
         order.total_price = cart.total_price()
         order.save()
         
-        # Создаем элементы заказа на основе корзины
+
         for cart_item in cart.items.all():
             OrderItem.objects.create(
                 order=order,
-                pizza_name=cart_item.pizza.name,
-                size=cart_item.size,
+                item_type=cart_item.item_type,
+                item_name=cart_item.get_name(),
+                size=cart_item.size if cart_item.item_type == 'pizza' else '',
                 quantity=cart_item.quantity,
                 unit_price=cart_item.unit_price(),
                 total_price=cart_item.total_price()
             )
         
-        # Очищаем корзину
+
         cart.items.all().delete()
-        
-        # Сохраняем ID заказа в сессии для страницы подтверждения
+
         self.request.session['last_order_id'] = order.id
         
         return redirect('order_success')
-    
-    def form_invalid(self, form):
-        messages.error(self.request, 'Пожалуйста, исправьте ошибки в форме.')
-        return super().form_invalid(form)
 
 def order_success(request):
     order_id = request.session.get('last_order_id')
     order = None
-    
+        
     if order_id:
         try:
             order = Order.objects.get(id=order_id)
         except Order.DoesNotExist:
             pass
-    
-    # Удаляем ID заказа из сессии после показа
+        
+
     if 'last_order_id' in request.session:
         del request.session['last_order_id']
-    
+        
     return render(request, 'pizzeria/order_success.html', {
         'order': order,
     })
 
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    
-    # Проверяем, принадлежит ли заказ текущему пользователю/сессии
+        
     cart = get_cart(request)
     if order.cart != cart:
         messages.error(request, 'У вас нет доступа к этому заказу.')
         return redirect('home')
-    
+        
     return render(request, 'pizzeria/order_detail.html', {
         'order': order,
     })

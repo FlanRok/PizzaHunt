@@ -49,8 +49,10 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('order', 'pizza_name', 'size', 'quantity', 'unit_price', 'total_price')
-    list_filter = ('size',)
+    list_display = ['id', 'item_name', 'item_type', 'size', 'quantity', 'unit_price', 'total_price']
+    list_filter = ['item_type']
+    search_fields = ['item_name', 'order__id']
+    readonly_fields = ['order', 'item_type', 'item_name', 'size', 'quantity', 'unit_price', 'total_price']
 
 @admin.register(Combo)
 class ComboAdmin(admin.ModelAdmin):

@@ -3,7 +3,9 @@
 
 {% block title %}Pizzahunt - Главная{% endblock %}
 
- {% block extra_css %} <link rel="stylesheet" href="{% static 'css/index.css' %}"> {% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
 
 {% block content %}
 <!-- Герой секция -->
@@ -30,19 +32,30 @@
             {% for combo in combos %}
             <div class="combo-item">
                 <div class="combo-img">
-                    <img src="{{ combo.image.url }}" alt="{{ combo.name }}">
+                    {% if combo.image_url %}
+                    <img src="{{ combo.image_url }}" alt="{{ combo.name }}">
+                    {% else %}
+                    <img src="{% static 'images/default-combo.jpg' %}" alt="{{ combo.name }}">
+                    {% endif %}
                 </div>
                 <div class="combo-content">
                     <h3 class="combo-title">{{ combo.name }}</h3>
-                    <p class="combo-description">{{ combo.description }}</p>
+                    <p class="combo-description">{{ combo.description|truncatechars:100 }}</p>
                     <div class="combo-price">
                         <div class="price">{{ combo.price }} ₽</div>
-                        <button class="add-to-cart"><i class="fas fa-plus"></i></button>
+                        <button class="add-to-cart-combo" 
+                                data-combo-id="{{ combo.id }}" 
+                                data-combo-name="{{ combo.name }}"
+                                data-combo-price="{{ combo.price }}">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <p>Комбо пока нет в меню</p>
+            <div class="no-combos">
+                <p>Комбо пока нет в меню</p>
+            </div>
             {% endfor %}
         </div>
     </div>
@@ -76,12 +89,28 @@
             {% for pizza in new_pizzas %}
             <div class="new-item">
                 <div class="new-badge">NEW</div>
-                <div class="new-icon"><i class="fas fa-pepper-hot"></i></div>
+                <div class="new-icon">
+                    {% if pizza.is_spicy %}
+                    <i class="fas fa-pepper-hot"></i>
+                    {% elif pizza.is_vegetarian %}
+                    <i class="fas fa-leaf"></i>
+                    {% else %}
+                    <i class="fas fa-pizza-slice"></i>
+                    {% endif %}
+                </div>
                 <h3 class="new-title">{{ pizza.name }}</h3>
-                <p class="new-description">{{ pizza.description|truncatechars:100 }}</p>
+                <p class="new-description">{{ pizza.description|truncatechars:80 }}</p>
+                <button class="add-to-cart-pizza" 
+                        data-pizza-id="{{ pizza.id }}" 
+                        data-pizza-name="{{ pizza.name }}"
+                        data-pizza-price="{{ pizza.price_30 }}">
+                    <i class="fas fa-plus"></i> Добавить в корзину
+                </button>
             </div>
             {% empty %}
-            <p>Новых пицц пока нет</p>
+            <div class="no-new">
+                <p>Новых пицц пока нет</p>
+            </div>
             {% endfor %}
         </div>
     </div>
@@ -123,4 +152,284 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Добавление комбо в корзину
+    document.querySelectorAll('.add-to-cart-combo').forEach(button => {
+        button.addEventListener('click', function() {
+            const comboId = this.dataset.comboId;
+            const comboName = this.dataset.comboName;
+            const comboPrice = this.dataset.comboPrice;
+            
+            addComboToCart(comboId, comboName, comboPrice, this);
+        });
+    });
+    
+    // Добавление пиццы в корзину (новинки)
+    document.querySelectorAll('.add-to-cart-pizza').forEach(button => {
+        button.addEventListener('click', function() {
+            const pizzaId = this.dataset.pizzaId;
+            const pizzaName = this.dataset.pizzaName;
+            const pizzaPrice = this.dataset.pizzaPrice;
+            
+            addPizzaToCart(pizzaId, pizzaName, pizzaPrice, this);
+        });
+    });
+    
+    // Функция добавления комбо в корзину
+    function addComboToCart(comboId, comboName, comboPrice, button) {
+        fetch('{% url "add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `item_type=combo&item_id=${comboId}&quantity=1`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(`"${comboName}" добавлено в корзину за ${comboPrice} ₽`);
+                
+                // Обновляем счетчик корзины
+                updateCartCount(data.cart_quantity);
+                
+                // Анимация кнопки
+                animateButton(button);
+            } else {
+                showNotification(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Произошла ошибка при добавлении в корзину', 'error');
+        });
+    }
+    
+    // Функция добавления пиццы в корзину
+    function addPizzaToCart(pizzaId, pizzaName, pizzaPrice, button) {
+        fetch('{% url "add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `item_type=pizza&item_id=${pizzaId}&size=30&quantity=1`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(`"${pizzaName}" добавлена в корзину за ${pizzaPrice} ₽`);
+                
+                // Обновляем счетчик корзины
+                updateCartCount(data.cart_quantity);
+                
+                // Анимация кнопки
+                animateButton(button, true);
+            } else {
+                showNotification(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Произошла ошибка при добавлении в корзину', 'error');
+        });
+    }
+    
+    // Функция обновления счетчика корзины
+    function updateCartCount(count) {
+        document.querySelectorAll('.cart-count').forEach(el => {
+            el.textContent = count;
+        });
+    }
+    
+    // Функция анимации кнопки
+    function animateButton(button, isPizzaButton = false) {
+        const originalHTML = button.innerHTML;
+        const originalBgColor = button.style.backgroundColor;
+        
+        // Меняем иконку на галочку
+        button.innerHTML = '<i class="fas fa-check"></i>' + (isPizzaButton ? ' Добавлено' : '');
+        button.style.backgroundColor = '#4CAF50';
+        button.style.color = 'white';
+        
+        // Возвращаем обратно через 2 секунды
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.style.backgroundColor = originalBgColor;
+            button.style.color = '';
+        }, 2000);
+    }
+    
+    // Функция показа уведомления
+    function showNotification(message, type = 'success') {
+        // Создаем элемент уведомления
+        const notification = document.createElement('div');
+        notification.className = `cart-notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+            <button class="notification-close"><i class="fas fa-times"></i></button>
+        `;
+        
+        // Добавляем в тело документа
+        document.body.appendChild(notification);
+        
+        // Показываем с анимацией
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        // Закрытие по клику на крестик
+        notification.querySelector('.notification-close').addEventListener('click', () => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        });
+        
+        // Автоматическое закрытие через 3 секунды
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, 3000);
+    }
+    
+    // Функция получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+
+// Стили для уведомлений
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+    .cart-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 10000;
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+        max-width: 350px;
+        border-left: 4px solid #4CAF50;
+    }
+    
+    .cart-notification.error {
+        border-left-color: #f44336;
+    }
+    
+    .cart-notification.show {
+        transform: translateX(0);
+    }
+    
+    .cart-notification i:first-child {
+        font-size: 1.3rem;
+        color: #4CAF50;
+    }
+    
+    .cart-notification.error i:first-child {
+        color: #f44336;
+    }
+    
+    .cart-notification span {
+        flex-grow: 1;
+        font-size: 0.95rem;
+        color: #333;
+    }
+    
+    .notification-close {
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1rem;
+        transition: color 0.2s;
+    }
+    
+    .notification-close:hover {
+        color: #333;
+    }
+    
+    /* Стили для кнопок добавления в корзину */
+    .add-to-cart-combo {
+        background-color: #d32f2f;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+    }
+    
+    .add-to-cart-combo:hover {
+        background-color: #ff9800;
+        transform: scale(1.1);
+    }
+    
+    .add-to-cart-pizza {
+        background-color: #d32f2f;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 15px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .add-to-cart-pizza:hover {
+        background-color: #ff9800;
+        transform: translateY(-2px);
+    }
+    
+    /* Сообщения об отсутствии данных */
+    .no-combos, .no-new, .no-promotions {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+        font-size: 1.1rem;
+    }
+`;
+document.head.appendChild(notificationStyles);
+</script>
 {% endblock %}

@@ -76,26 +76,6 @@ class Cart(models.Model):
     def total_quantity(self):
         return sum(item.quantity for item in self.items.all())
 
-class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items', verbose_name="Корзина")
-    pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE, verbose_name="Пицца")
-    size = models.CharField(max_length=10, choices=Pizza.SIZE_CHOICES, default='30', verbose_name="Размер")
-    quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)], verbose_name="Количество")
-    added_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
-    
-    class Meta:
-        verbose_name = "Элемент корзины"
-        verbose_name_plural = "Элементы корзины"
-        unique_together = ['cart', 'pizza', 'size']
-    
-    def __str__(self):
-        return f"{self.pizza.name} ({self.size}) - {self.quantity} шт."
-    
-    def unit_price(self):
-        return self.pizza.get_price_by_size(self.size)
-    
-    def total_price(self):
-        return self.unit_price() * self.quantity
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -137,10 +117,18 @@ class Order(models.Model):
         return f"Заказ #{self.id} - {self.name} ({self.get_status_display()})"
 
 class OrderItem(models.Model):
+    ITEM_TYPE_CHOICES = [
+        ('pizza', 'Пицца'),
+        ('combo', 'Комбо'),
+    ]
+    
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name="Заказ")
-    pizza_name = models.CharField(max_length=200, verbose_name="Название пиццы")
-    size = models.CharField(max_length=10, verbose_name="Размер")
+    item_type = models.CharField(max_length=10, choices=ITEM_TYPE_CHOICES, verbose_name="Тип товара")
+    
+    item_name = models.CharField(max_length=200, verbose_name="Название товара")
+    size = models.CharField(max_length=10, blank=True, verbose_name="Размер")
     quantity = models.PositiveIntegerField(verbose_name="Количество")
+    
     unit_price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Цена за единицу")
     total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Общая цена")
     
@@ -149,7 +137,9 @@ class OrderItem(models.Model):
         verbose_name_plural = "Элементы заказа"
     
     def __str__(self):
-        return f"{self.pizza_name} ({self.size}) - {self.quantity} шт."
+        if self.size:
+            return f"{self.item_name} ({self.size}) - {self.quantity} шт."
+        return f"{self.item_name} - {self.quantity} шт."
 
 class Combo(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название комбо")
@@ -158,6 +148,12 @@ class Combo(models.Model):
     image = models.ImageField(upload_to='combos/', verbose_name="Изображение")
     includes = models.TextField(verbose_name="Что входит")
     order = models.IntegerField(default=0, verbose_name="Порядок отображения")
+
+    @property
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return None
     
     class Meta:
         verbose_name = "Комбо"
@@ -166,6 +162,66 @@ class Combo(models.Model):
     
     def __str__(self):
         return self.name
+
+class CartItem(models.Model):
+    ITEM_TYPE_CHOICES = [
+        ('pizza', 'Пицца'),
+        ('combo', 'Комбо'),
+    ]
+    
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items', verbose_name="Корзина")
+    item_type = models.CharField(max_length=10, choices=ITEM_TYPE_CHOICES, verbose_name="Тип товара")
+    
+    pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Пицца")
+    combo = models.ForeignKey(Combo, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Комбо")
+    
+    size = models.CharField(max_length=10, choices=Pizza.SIZE_CHOICES, default='30', verbose_name="Размер", blank=True)
+    
+    quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)], verbose_name="Количество")
+    added_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
+    
+    class Meta:
+        verbose_name = "Элемент корзины"
+        verbose_name_plural = "Элементы корзины"
+        unique_together = [
+            ['cart', 'pizza', 'size'], 
+            ['cart', 'combo'],         
+        ]
+    
+    def __str__(self):
+        if self.item_type == 'pizza' and self.pizza:
+            return f"{self.pizza.name} ({self.size}) - {self.quantity} шт."
+        elif self.item_type == 'combo' and self.combo:
+            return f"{self.combo.name} - {self.quantity} шт."
+        return "Неизвестный товар"
+    
+    def get_name(self):
+        """Получить название товара"""
+        if self.item_type == 'pizza' and self.pizza:
+            return self.pizza.name
+        elif self.item_type == 'combo' and self.combo:
+            return self.combo.name
+        return "Неизвестный товар"
+    
+    def get_image_url(self):
+        """Получить URL изображения"""
+        if self.item_type == 'pizza' and self.pizza and self.pizza.image_url:
+            return self.pizza.image_url
+        elif self.item_type == 'combo' and self.combo and self.combo.image_url:
+            return self.combo.image_url
+        return None
+    
+    def unit_price(self):
+        """Получить цену за единицу"""
+        if self.item_type == 'pizza' and self.pizza:
+            return self.pizza.get_price_by_size(self.size)
+        elif self.item_type == 'combo' and self.combo:
+            return self.combo.price
+        return 0
+    
+    def total_price(self):
+        """Получить общую цену"""
+        return self.unit_price() * self.quantity
 
 class Promotion(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")

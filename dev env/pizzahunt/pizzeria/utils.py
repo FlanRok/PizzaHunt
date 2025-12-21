@@ -19,29 +19,48 @@ def get_cart(request):
     
     return cart
 
-def add_to_cart(request, pizza_id, size='30', quantity=1):
-    """Добавить пиццу в корзину"""
-    from .models import Pizza
+def add_to_cart(request, item_type, item_id, size='30', quantity=1):
+    """Добавить товар в корзину"""
+    from .models import Pizza, Combo, CartItem
     
     cart = get_cart(request)
     
     try:
-        pizza = Pizza.objects.get(id=pizza_id)
+        if item_type == 'pizza':
+            item = Pizza.objects.get(id=item_id)
 
-        cart_item, created = CartItem.objects.get_or_create(
-            cart=cart,
-            pizza=pizza,
-            size=size,
-            defaults={'quantity': quantity}
-        )
-
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart,
+                item_type='pizza',
+                pizza=item,
+                size=size,
+                defaults={'quantity': quantity}
+            )
+            
+            item_name = item.name
+            
+        elif item_type == 'combo':
+            item = Combo.objects.get(id=item_id)
+            
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart,
+                item_type='combo',
+                combo=item,
+                defaults={'quantity': quantity}
+            )
+            
+            item_name = item.name
+        else:
+            return False, "Неизвестный тип товара"
+        
         if not created:
             cart_item.quantity += quantity
             cart_item.save()
         
-        return True, "Товар добавлен в корзину"
-    except Pizza.DoesNotExist:
-        return False, "Пицца не найдена"
+        return True, f"{item_name} добавлен(о) в корзину"
+    
+    except (Pizza.DoesNotExist, Combo.DoesNotExist):
+        return False, "Товар не найден"
     except Exception as e:
         return False, f"Ошибка: {str(e)}"
 
@@ -49,7 +68,7 @@ def update_cart_item(request, item_id, quantity):
     """Обновить количество товара в корзине"""
     try:
         cart_item = CartItem.objects.get(id=item_id)
-
+        
         cart = get_cart(request)
         if cart_item.cart != cart:
             return False, "Этот товар не в вашей корзине"
@@ -68,7 +87,7 @@ def remove_from_cart(request, item_id):
     """Удалить товар из корзины"""
     try:
         cart_item = CartItem.objects.get(id=item_id)
-  
+
         cart = get_cart(request)
         if cart_item.cart != cart:
             return False, "Этот товар не в вашей корзине"
