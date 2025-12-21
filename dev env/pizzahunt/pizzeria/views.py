@@ -5,8 +5,98 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import *
-from .forms import FeedbackForm, OrderForm
+from .forms import FeedbackForm, OrderForm, RegisterForm, LoginForm, ProfileForm, UserUpdateForm
 from .utils import *
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('profile')
+    
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            
+            login(request, user)
+
+            cart = get_cart(request)
+            if cart and not cart.user:
+                cart.user = user
+                cart.save()
+            
+            messages.success(request, f'Добро пожаловать, {user.username}! Регистрация успешна.')
+            return redirect('profile')
+    else:
+        form = RegisterForm()
+    
+    return render(request, 'pizzeria/auth/register.html', {'form': form})
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('profile')
+    
+    if request.method == 'POST':
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            
+            cart = get_cart(request)
+            if cart and not cart.user:
+                cart.user = user
+                cart.save()
+            
+            messages.success(request, f'Добро пожаловать, {user.username}!')
+            next_url = request.GET.get('next', 'profile')
+            return redirect(next_url)
+    else:
+        form = LoginForm()
+    
+    return render(request, 'pizzeria/auth/login.html', {'form': form})
+
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'Вы успешно вышли из системы.')
+    return redirect('home')
+
+@login_required
+def profile_view(request):
+    orders = Order.objects.filter(cart__user=request.user).order_by('-created_at')[:5]
+    return render(request, 'pizzeria/profile.html', {
+        'orders': orders,
+    })
+
+@login_required
+def profile_edit_view(request):
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Профиль успешно обновлен!')
+            return redirect('profile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    
+    return render(request, 'pizzeria/profile_edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    })
+
+@login_required
+def order_history_view(request):
+    orders = Order.objects.filter(cart__user=request.user).order_by('-created_at')
+    return render(request, 'pizzeria/order_history.html', {
+        'orders': orders,
+    })
+
 
 class HomeView(TemplateView):
     template_name = 'pizzeria/index.html'
