@@ -1,5 +1,4 @@
-{% extends 'pizzeria/base.html' %} {% load static %} {% block title
-%}Редактировать профиль - Pizzahunt{% endblock %} {% block extra_css %}
+{% extends 'pizzeria/base.html' %} {% load static %} {% block title%}Редактировать профиль - Pizzahunt{% endblock %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
 <style>
   .profile-edit-section {
@@ -329,8 +328,7 @@
               <label for="id_birth_date" class="form-label"
                 >Дата рождения</label
               >
-              {{ profile_form.birth_date }} {% if profile_form.birth_date.errors
-              %}
+              {{ profile_form.birth_date }} {% if profile_form.birth_date.errors%}
               <div class="error-message">
                 {{ profile_form.birth_date.errors }}
               </div>

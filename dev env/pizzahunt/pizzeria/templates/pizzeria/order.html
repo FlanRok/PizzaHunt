@@ -108,8 +108,8 @@
             <div class="total-row grand-total">
               <span>Итого к оплате</span>
               <span class="grand-total-price">
-                {% if cart.total_price > 1000 %} {{ cart.total_price }} ₽ {%
-                else %} {{ cart.total_price|add:200 }} ₽ {% endif %}
+                {% if cart.total_price > 1000 %} {{ cart.total_price }}₽ 
+                {%else %} {{ cart.total_price|add:200 }} ₽ {% endif %}
               </span>
             </div>
           </div>

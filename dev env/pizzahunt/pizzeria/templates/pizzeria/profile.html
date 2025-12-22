@@ -50,7 +50,7 @@
         </nav>
 
         <!-- Админ секция -->
-        {% if user.is_staff %}
+        {% if user.is_staff %} 
         <div class="admin-section">
           <h4><i class="fas fa-crown"></i> Администратор</h4>
           <a
@@ -125,8 +125,7 @@
                 <div class="order-info">
                   <p><strong>Сумма:</strong> {{ order.total_price }} ₽</p>
                   <p>
-                    <strong>Доставка:</strong> {{ order.address|truncatechars:50
-                    }}
+                    <strong>Доставка:</strong> {{ order.address|truncatechars:50}}
                   </p>
                   <p>
                     <strong>Оплата:</strong>
@@ -137,8 +136,7 @@
                     {% endif %}
                   </p>
                   <p>
-                    <strong>Способ оплаты:</strong> {{
-                    order.get_payment_method_display }}
+                    <strong>Способ оплаты:</strong> {{order.get_payment_method_display }}
                   </p>
                 </div>
               </div>

@@ -1,129 +1,116 @@
-{% extends 'pizzeria/base.html' %} {% load static %} {% block title %}Корзина -
-Pizzahunt{% endblock %} {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/cart.css' %}" />
-{% endblock %} {% block content %}
+{% extends 'pizzeria/base.html' %}
+{% load static %}
+
+{% block title %}Корзина - Pizzahunt{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
 <section class="cart-section">
-  <div class="container">
-    <h1 class="page-title">Корзина</h1>
-
-    {% if cart_items %}
-    <div class="cart-content">
-      <div class="cart-items">
-        {% for item in cart_items %}
-        <div class="cart-item" data-item-id="{{ item.id }}">
-          <div class="cart-item-img">
-            {% with image_url=item.get_image_url %} {% if image_url %}
-            <img src="{{ image_url }}" alt="{{ item.get_name }}" />
-            {% else %}
-            <img
-              src="{% static 'images/pizza.png' %}"
-              alt="{{ item.get_name }}"
-            />
-            {% endif %} {% endwith %}
-          </div>
-          <div class="cart-item-info">
-            <h3 class="cart-item-name">{{ item.get_name }}</h3>
-            {% if item.item_type == 'pizza' %}
-            <p class="cart-item-size">Размер: {{ item.get_size_display }}</p>
-            {% endif %}
-            <p class="cart-item-price">
-              Цена: {{ item.unit_price|floatformat:0 }} ₽
-            </p>
-
-            <div class="cart-item-controls">
-              <div class="quantity-controls">
-                <button class="quantity-btn minus" data-item-id="{{ item.id }}">
-                  -
-                </button>
-                <input
-                  type="number"
-                  class="quantity-input"
-                  value="{{ item.quantity }}"
-                  min="1"
-                  max="99"
-                  data-item-id="{{ item.id }}"
-                />
-                <button class="quantity-btn plus" data-item-id="{{ item.id }}">
-                  +
-                </button>
-              </div>
-              <div class="cart-item-total">
-                <span class="total-price"
-                  >{{ item.total_price|floatformat:0 }} ₽</span
-                >
-                <button
-                  class="remove-btn"
-                  data-item-id="{{ item.id }}"
-                  title="Удалить"
-                >
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
+    <div class="container">
+        <h1 class="page-title">Корзина</h1>
+        
+        {% if cart_items %}
+        <div class="cart-content">
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item" data-item-id="{{ item.id }}">
+                    <div class="cart-item-img">
+                        {% with image_url=item.get_image_url %}
+                            {% if image_url %}
+                                <img src="{{ image_url }}" alt="{{ item.get_name }}">
+                            {% else %}
+                                <img src="{% static 'images/pizza.png' %}" alt="{{ item.get_name }}">
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="cart-item-info">
+                        <h3 class="cart-item-name">{{ item.get_name }}</h3>
+                        {% if item.item_type == 'pizza' %}
+                        <p class="cart-item-size">Размер: {{ item.get_size_display }}</p>
+                        {% endif %}
+                        <p class="cart-item-price">Цена: {{ item.unit_price|floatformat:0 }} ₽</p>
+                        
+                        <div class="cart-item-controls">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn minus" data-item-id="{{ item.id }}">-</button>
+                                <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1" max="99" data-item-id="{{ item.id }}">
+                                <button class="quantity-btn plus" data-item-id="{{ item.id }}">+</button>
+                            </div>
+                            <div class="cart-item-total">
+                                <span class="total-price">{{ item.total_price|floatformat:0 }} ₽</span>
+                                <button class="remove-btn" data-item-id="{{ item.id }}" title="Удалить">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-          </div>
+            
+            <div class="cart-summary">
+                <div class="summary-card">
+                    <h3>Итого</h3>
+                    <div class="summary-row">
+                        <span>Товары ({{ cart.total_quantity }} шт.)</span>
+                        <span class="summary-value">{{ cart.total_price|floatformat:0 }} ₽</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Доставка</span>
+                        <span class="summary-value">
+                            {% if cart.total_price > 1000 %}
+                            <span style="color: #4CAF50;">Бесплатно</span>
+                            {% else %}
+                            200 ₽
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row total">
+                        <span>К оплате</span>
+                        <span class="summary-total">
+                            {% if cart.total_price > 1000 %}
+                            {{ cart.total_price|floatformat:0 }} ₽
+                            {% else %}
+                            {{ cart.total_price|add:200|floatformat:0 }} ₽
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="cart-actions">
+                        <a href="{% url 'menu' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Продолжить покупки
+                        </a>
+                        <a href="{% url 'order' %}" class="btn btn-primary">
+                            Оформить заказ <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="cart-promo">
+                        <p><i class="fas fa-gift"></i> При заказе от 1000 ₽ доставка бесплатная!</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endfor %}
-      </div>
-
-      <div class="cart-summary">
-        <div class="summary-card">
-          <h3>Итого</h3>
-          <div class="summary-row">
-            <span>Товары ({{ cart.total_quantity }} шт.)</span>
-            <span class="summary-value"
-              >{{ cart.total_price|floatformat:0 }} ₽</span
-            >
-          </div>
-          <div class="summary-row">
-            <span>Доставка</span>
-            <span class="summary-value">
-              {% if cart.total_price > 1000 %}
-              <span style="color: #4caf50">Бесплатно</span>
-              {% else %} 200 ₽ {% endif %}
-            </span>
-          </div>
-          <div class="summary-divider"></div>
-          <div class="summary-row total">
-            <span>К оплате</span>
-            <span class="summary-total">
-              {% if cart.total_price > 1000 %} {{ cart.total_price|floatformat:0
-              }} ₽ {% else %} {{ cart.total_price|add:200|floatformat:0 }} ₽ {%
-              endif %}
-            </span>
-          </div>
-
-          <div class="cart-actions">
-            <a href="{% url 'menu' %}" class="btn btn-secondary">
-              <i class="fas fa-arrow-left"></i> Продолжить покупки
+        {% else %}
+        <div class="empty-cart">
+            <div class="empty-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h2>Ваша корзина пуста</h2>
+            <p>Добавьте пиццу из меню, чтобы сделать заказ</p>
+            <a href="{% url 'menu' %}" class="btn btn-primary">
+                Перейти в меню <i class="fas fa-arrow-right"></i>
             </a>
-            <a href="{% url 'order' %}" class="btn btn-primary">
-              Оформить заказ <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-
-          <div class="cart-promo">
-            <p>
-              <i class="fas fa-gift"></i> При заказе от 1000 ₽ доставка
-              бесплатная!
-            </p>
-          </div>
         </div>
-      </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="empty-cart">
-      <div class="empty-icon">
-        <i class="fas fa-shopping-cart"></i>
-      </div>
-      <h2>Ваша корзина пуста</h2>
-      <p>Добавьте пиццу из меню, чтобы сделать заказ</p>
-      <a href="{% url 'menu' %}" class="btn btn-primary">
-        Перейти в меню <i class="fas fa-arrow-right"></i>
-      </a>
-    </div>
-    {% endif %}
-  </div>
 </section>
-{% endblock %} {% block extra_js %}
+{% endblock %}
+
+{% block extra_js %}
 <script src="{% static 'js/cart.js' %}"></script>
 {% endblock %}
